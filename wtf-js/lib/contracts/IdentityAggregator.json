@@ -1,0 +1,14 @@
+[
+  "constructor(string[],address[])",
+  "event AddSupportForContract(string)",
+  "event OwnershipTransferred(address indexed,address indexed)",
+  "event RemoveSupportForContract(string)",
+  "function addVerifyJWTContract(string,address)",
+  "function contractAddrForKeyword(string) view returns (address)",
+  "function getAllAccounts(address) returns (bytes[])",
+  "function getKeywords() view returns (string[])",
+  "function owner() view returns (address)",
+  "function removeSupportFor(string)",
+  "function renounceOwnership()",
+  "function transferOwnership(address)"
+]
