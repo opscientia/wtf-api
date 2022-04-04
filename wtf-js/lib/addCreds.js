@@ -1,10 +1,13 @@
 const ethers = require('ethers');
 
-const search64 = require('../../whoisthis.wtf-frontend/src/searchForPlaintextInBase64.js');
+// i put this in a package to not rely on local filepaths
+// const search64 = require('../../whoisthis.wtf-frontend/src/searchForPlaintextInBase64.js');
+import { searchForPlainTextInBase64 as search64, sandwichIDWithBreadFromContract } from 'wtfprotocol-helpers';
 
 const vjwtABI = require('./contracts/VerifyJWT.json');
 
 
+// lol :p
 const consoleLogThis = (param) => {
   console.log()
   console.log()
@@ -17,11 +20,6 @@ const consoleLogThis = (param) => {
 
 
 const sha256FromString = x => ethers.utils.sha256(ethers.utils.toUtf8Bytes(x))
-const sandwichIDWithBreadFromContract = async (id, contract) => {
-  let sandwich = (await contract.bottomBread()) + Buffer.from(id).toString('hex') + (await contract.topBread());
-  sandwich = sandwich.replaceAll('0x', '');
-  return sandwich
-}
 
 // Connect to the network
 // let provider = ethers.getDefaultProvider("http://localhost:8545");
@@ -77,6 +75,9 @@ const addCreds = async () => {
 
   consoleLogThis("Made it to line 81")
 
+  // OK, couple comments:
+  // 1. You don't need gas for a view function :)
+  // 2. btw, it's best XOR is done locally -- calling it on chain will reveal the data being XORed, which we're trying to hide for now, before revealing in the next block. A view function only reveals its inputs to the RPC node, so we're probably safe. But it's still better to keep the secret locally and not trust the RPC node
   const proof = ethers.utils.sha256(await contractWithSigner.XOR(hashedMessage, wallet.address, {gasLimit:100500}));
 
   consoleLogThis("Made it to line 85")
