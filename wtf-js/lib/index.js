@@ -6,15 +6,16 @@ const idAggABI = require('./contracts/IdentityAggregator.json');
 const contractAddresses = require('./contracts/contractAddresses.json');
 // this may help:
 // import { fixedBufferXOR as xor, sandwichIDWithBreadFromContract, padBase64, hexToString, searchForPlainTextInBase64 } from 'wtfprotocol-helpers';
-
+const { hexToString } = require('wtfprotocol-helpers');
 
 const idAggStr = 'IdentityAggregator';
 const vjwtStr = 'VerifyJWT';
 
 
-// NOTE: This is only the outline of this function. Needs to be tested.
+// NOTE: This is only the outline of this function. Needs to be tested. Also handle errors.
 exports.credentialsForAddress = async (address, network, service) => {
-  const provider = ethers.getDefaultProvider(); // TODO: ethers.getDefaultProvider({ infura: { projectId, projectSecret } });
+//   const provider = ethers.getDefaultProvider(); // TODO: ethers.getDefaultProvider({ infura: { projectId, projectSecret } });
+  const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
 
   // query idAggregator for keywords
   const idAggregatorAddr = contractAddresses[idAggStr][network];
@@ -26,8 +27,8 @@ exports.credentialsForAddress = async (address, network, service) => {
     if (keyword == service) {
       const vjwtAddr = contractAddresses[vjwtStr][network][keyword];
       const vjwt = new ethers.Contract(vjwtAddr, vjwtABI, provider);
-      // It would be great to decode these from bytes to a human-readable string if necessary. It may not be necessary though; i haven't seen the output
-      return await vjwt.credsForAddress(address);
+      const credsBytes = await vjwt.credsForAddress(address);
+      return hexToString(credsBytes);
     }
   }
   // TODO: We need standardized error messages and response codes
@@ -37,21 +38,22 @@ exports.credentialsForAddress = async (address, network, service) => {
 
 // NOTE: This is only the outline of this function. Needs to be tested.
 exports.addressForCredentials = async (network, creds, service) => {
-  const provider = ethers.getDefaultProvider(); // TODO: ethers.getDefaultProvider({ infura: { projectId, projectSecret } });
+//   const provider = ethers.getDefaultProvider(); // TODO: ethers.getDefaultProvider({ infura: { projectId, projectSecret } });
+  const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
 
-  // TODO: Do creds need to be encoded? Are we taking a string from user (and passing bytes to vjwt)?
-  // Yea, they are unfortunately encoded as bytes
   // query idAggregator for keywords
   const idAggregatorAddr = contractAddresses[idAggStr][network];
   const idAggregator = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
   const keywords = await idAggregator.getKeywords();
 
+  const encodedCreds = Buffer.from(creds);
+
   // query each vjwt for address
   for (const keyword of keywords) {
-    if (keyword) {
+    if (keyword == service) {
       const vjwtAddr = contractAddresses[vjwtStr][network][keyword];
       const vjwt = new ethers.Contract(vjwtAddr, vjwtABI, provider);
-      return await vjwt.addressForCreds(creds);
+      return await vjwt.addressForCreds(encodedCreds);
     }
   }
   // TODO: We need standardized error messages and response codes
