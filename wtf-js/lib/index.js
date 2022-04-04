@@ -4,6 +4,8 @@ const vjwtABI = require('./contracts/VerifyJWT.json');
 const idAggABI = require('./contracts/IdentityAggregator.json');
 // TODO: contractAddresses contains mock addresses. Update the json file with deployed contract addresses
 const contractAddresses = require('./contracts/contractAddresses.json');
+// this may help:
+// import { fixedBufferXOR as xor, sandwichIDWithBreadFromContract, padBase64, hexToString, searchForPlainTextInBase64 } from 'wtfprotocol-helpers';
 
 
 const idAggStr = 'IdentityAggregator';
@@ -24,6 +26,7 @@ exports.credentialsForAddress = async (address, network, service) => {
     if (keyword == service) {
       const vjwtAddr = contractAddresses[vjwtStr][network][keyword];
       const vjwt = new ethers.Contract(vjwtAddr, vjwtABI, provider);
+      // It would be great to decode these from bytes to a human-readable string if necessary. It may not be necessary though; i haven't seen the output
       return await vjwt.credsForAddress(address);
     }
   }
@@ -37,7 +40,7 @@ exports.addressForCredentials = async (network, creds, service) => {
   const provider = ethers.getDefaultProvider(); // TODO: ethers.getDefaultProvider({ infura: { projectId, projectSecret } });
 
   // TODO: Do creds need to be encoded? Are we taking a string from user (and passing bytes to vjwt)?
-
+  // Yea, they are unfortunately encoded as bytes
   // query idAggregator for keywords
   const idAggregatorAddr = contractAddresses[idAggStr][network];
   const idAggregator = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
