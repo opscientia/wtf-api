@@ -8,6 +8,9 @@ const contractAddresses = require('./contracts/contractAddresses.json');
 // import { fixedBufferXOR as xor, sandwichIDWithBreadFromContract, padBase64, hexToString, searchForPlainTextInBase64 } from 'wtfprotocol-helpers';
 const { hexToString } = require('wtfprotocol-helpers');
 
+const supportedNetworks = ['ethereum'];
+const supportedServices = ['orcid', 'google'];
+
 const idAggStr = 'IdentityAggregator';
 const vjwtStr = 'VerifyJWT';
 
@@ -58,4 +61,25 @@ exports.addressForCredentials = async (network, creds, service) => {
   }
   // TODO: We need standardized error messages and response codes
   return "No " + service + " credentials found for " + creds + " on " + network;
+}
+
+
+/**
+ * Get all every registered user address on WTF for every supported network
+ * @return Dictionary of networks and user addresses with shape: {'network': {'service': ['0xabc...',],},}
+ */
+exports.getAllUserAddresses = async () => {
+//   const provider = ethers.getDefaultProvider(); // TODO: ethers.getDefaultProvider({ infura: { projectId, projectSecret } });
+  const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
+  let userAddresses = {};
+  for (network of supportedNetworks) {
+    userAddresses[network] = {};
+    for (keyword of supportedServices) {
+      const vjwtAddr = contractAddresses[vjwtStr][network][keyword];
+      const vjwt = new ethers.Contract(vjwtAddr, vjwtABI, provider);
+      const addresses = await vjwt.getRegisteredAddresses();
+      userAddresses[network][keyword] = addresses;
+    }
+  }
+  return userAddresses;
 }
