@@ -1,4 +1,5 @@
 const ethers = require('ethers');
+const Buffer = require('buffer/').Buffer
 
 // import { fixedBufferXOR as xor, sandwichIDWithBreadFromContract, padBase64, hexToString, searchForPlainTextInBase64 } from 'wtfprotocol-helpers';
 const { hexToString } = require('wtfprotocol-helpers');

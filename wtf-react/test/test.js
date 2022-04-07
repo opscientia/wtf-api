@@ -23,7 +23,7 @@ describe('wtf-js', function () {
     this.orcid = '0000-0002-2308-9517'
     this.gmail = 'nanaknihal@gmail.com'
 
-    wtf.setProviderURL('http://localhost:8545')
+    wtf.init('http://localhost:8545')
   });
 
   describe('credentialsForAddress', function () {
