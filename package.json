@@ -1,5 +1,12 @@
 {
-  "dependencies": {
-    "wtfprotocol-helpers": "^1.0.0"
+  "name": "wtf",
+  "type": "module",
+  "main": "./wtf-js/lib/index.js",
+  "module": "./wtf-react/lib/index.js",
+  "exports": {
+    ".": {
+      "require":  "./wtf-js/lib/index.js",
+      "default": "./wtf-react/lib/index.js"
+    }
   }
 }
