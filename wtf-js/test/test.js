@@ -22,6 +22,8 @@ describe('wtf-js', function () {
     this.userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
     this.orcid = '0000-0002-2308-9517'
     this.gmail = 'nanaknihal@gmail.com'
+
+    wtf.init('http://localhost:8545')
   });
 
   describe('credentialsForAddress', function () {

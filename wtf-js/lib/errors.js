@@ -1,4 +1,7 @@
 
+exports.ConnectionFailedError = () => {
+  return new Error('Could not connect to the specified JSON RPC provider')
+}
 
 exports.UnsupportedNetworkError = (network) => {
   return new Error(`WTF protocol does not support ${network}`)

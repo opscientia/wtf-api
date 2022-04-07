@@ -2,7 +2,8 @@ const ethers = require('ethers');
 
 // import { fixedBufferXOR as xor, sandwichIDWithBreadFromContract, padBase64, hexToString, searchForPlainTextInBase64 } from 'wtfprotocol-helpers';
 const { hexToString } = require('wtfprotocol-helpers');
-const { 
+const {
+  ConnectionFailedError,
   UnsupportedNetworkError,
   UnsupportedServiceError,
   CredentialsNotFoundError,
@@ -18,8 +19,8 @@ const supportedServices = ['orcid', 'google'];
 const idAggStr = 'IdentityAggregator';
 const vjwtStr = 'VerifyJWT';
 
-// const provider = ethers.getDefaultProvider(); // TODO: ethers.getDefaultProvider({ infura: { projectId, projectSecret } });
-const provider = new ethers.providers.JsonRpcProvider("http://localhost:8545");
+// let provider = new ethers.providers.JsonRpcProvider(process.env.MORALIS_NODE_URL);
+let provider = ethers.getDefaultProvider()
 
 const getIdAggregator = (network) => {
   const idAggregatorAddr = contractAddresses[idAggStr][network];
@@ -63,6 +64,19 @@ const getAddress = async (vjwt, encodedCreds) => {
   }
   else {
     return address;
+  }
+}
+
+/**
+ * Specify the URL of the JSON RPC provider used by WTF.
+ * @param {string} rpcURL The provider URL
+ */
+exports.setProviderURL = async (rpcURL) => {
+  try {
+    provider = new ethers.providers.JsonRpcProvider(rpcURL)
+  }
+  catch (err) {
+    throw ConnectionFailedError()
   }
 }
 
