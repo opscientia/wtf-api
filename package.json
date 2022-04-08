@@ -1,12 +1,12 @@
 {
   "name": "wtf-lib",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "main": "./wtf-js/lib/index.js",
   "module": "./wtf-react/lib/index.js",
   "exports": {
     ".": {
-      "require":  "./wtf-js/lib/index.js",
+      "require": "./wtf-js/lib/index.js",
       "default": "./wtf-react/lib/index.js"
     }
   }
