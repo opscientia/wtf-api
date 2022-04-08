@@ -1,24 +1,11 @@
 {
-  "IdentityAggregator": {
-    "ethereum": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
-    "polygon": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
-  },
   "VerifyJWT": {
-    "ethereum": {
-      "orcid" : "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-      "google" : "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "facebook" : null,
-      "github" : null,
-      "orcidavaxc" : "0x4D39C84712C9A13f4d348050E82A2Eeb45DB5e29",
-      "googleavaxc" : "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+    "ropsten": {
+      "orcid" : "0xdF10310d2C72F5358b19bF6A7C817Ec4570b270f"
     },
     "polygon": {
-      "orcid" : "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-      "google" : "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-      "facebook" : null,
-      "github" : null,
-      "orcidavaxc" : "0x4D39C84712C9A13f4d348050E82A2Eeb45DB5e29",
-      "googleavaxc" : "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+      "orcid" : "0x2779550E47349711d3CD895aFd8aE315ee9BC597",
+      "google" : "0x1362fe03c3c338f2e7dfaA44205f2B047f2C430D"
     }
   }
 }
