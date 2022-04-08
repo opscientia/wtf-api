@@ -48,6 +48,16 @@ const getVerifyJWT = (network, service) => {
   }
 }
 
+const getWTFBios = (network) => {
+  const WTFBiosAddr = contractAddresses[wtfBiosStr][network];
+  if (WTFBiosAddr){
+    return new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
+  }
+  else {
+    throw UnsupportedNetworkError(network);
+  }
+}
+
 const getCreds = async (vjwt, userAddress) => {
   const credsBytes = await vjwt.credsForAddress(userAddress);
   if (!credsBytes) {
@@ -126,4 +136,15 @@ exports.getAllUserAddresses = async () => {
     }
   }
   return userAddresses;
+}
+
+/**
+ * Get bio associated with user's address on the specified network.
+ * @param {string} address The user's crypto address
+ * @param {string} network The blockchain network
+ * @returns User bio
+ */
+exports.bioForAddress = async (address, network) => {
+  const wtfBios = getWTFBios(network);
+  return await wtfBios.bioForAddress(address);
 }
