@@ -2,3 +2,4 @@
 .nvmrc
 .vscode
 node_modules
+dist
