@@ -1,6 +1,6 @@
 {
   "name": "wtf-lib",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "main": "./wtf-js/lib/index.js",
   "module": "./wtf-react/lib/index.js",
