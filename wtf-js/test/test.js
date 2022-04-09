@@ -7,6 +7,7 @@ const {
   CredentialsNotFoundError,
   AddressNotFoundError
 } = require('../lib/errors');
+const { ethers } = require('ethers');
 
 
 /**
@@ -115,6 +116,13 @@ describe('wtf-js', function () {
       expect(addresses['ethereum']).to.be.an('object').that.has.keys('orcid', 'google');
       expect(addresses['ethereum']['orcid']).to.be.an('array').that.has.members([this.userAddress]);
       expect(addresses['ethereum']['google']).to.be.an('array').that.has.members([this.userAddress]);
+    });
+  });
+
+  describe('bioForAddress', function () {
+    it('Should return no bio for unregistered address', async function () {
+      const bio = await wtf.bioForAddress('0x1234567891234567891234567891234567891234', 'ethereum');
+      expect(bio).to.equal('');
     });
   });
 });

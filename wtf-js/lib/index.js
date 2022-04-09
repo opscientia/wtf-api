@@ -11,6 +11,7 @@ const {
 } = require('./errors');
 
 const vjwtABI = require('./contracts/VerifyJWT.json');
+const wtfBiosABI = require('./contracts/WTFBios.json');
 const idAggABI = require('./contracts/IdentityAggregator.json');
 // TODO: contractAddresses contains mock addresses. Update the json file with deployed contract addresses
 const contractAddresses = require('./contracts/contractAddresses.json');
@@ -18,6 +19,7 @@ const supportedNetworks = ['ethereum'];
 const supportedServices = ['orcid', 'google'];
 const idAggStr = 'IdentityAggregator';
 const vjwtStr = 'VerifyJWT';
+const wtfBiosStr = 'WTFBios';
 
 // let provider = new ethers.providers.JsonRpcProvider(process.env.MORALIS_NODE_URL);
 let provider = ethers.getDefaultProvider()
@@ -44,6 +46,16 @@ const getVerifyJWT = (network, service) => {
   }
   else {
     return new ethers.Contract(vjwtAddr, vjwtABI, provider);
+  }
+}
+
+const getWTFBios = (network) => {
+  const WTFBiosAddr = contractAddresses[wtfBiosStr][network];
+  if (WTFBiosAddr){
+    return new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
+  }
+  else {
+    throw UnsupportedNetworkError(network);
   }
 }
 
@@ -125,4 +137,15 @@ exports.getAllUserAddresses = async () => {
     }
   }
   return userAddresses;
+}
+
+/**
+ * Get bio associated with user's address on the specified network.
+ * @param {string} address The user's crypto address
+ * @param {string} network The blockchain network
+ * @returns User bio
+ */
+exports.bioForAddress = async (address, network) => {
+  const wtfBios = getWTFBios(network);
+  return await wtfBios.bioForAddress(address);
 }
