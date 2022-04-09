@@ -1,7 +1,5 @@
 const ethers = require('ethers');
 
-const search64 = require('../../../../whoisthis.wtf-frontend/src/searchForPlaintextInBase64.js');
-
 exports.vmExceptionStr = 'VM Exception while processing transaction: reverted with reason string ';
 
 exports.orcidKid = '7hdmdswarosg3gjujo8agwtazgkp1ojs';
