@@ -18,7 +18,7 @@ const {
 describe('wtf-js', function () {
 
   before(function () {
-    this.userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
+    this.userAddress = '0x3fB3913a3452c20c2dA220Bd4D2635765b934c67';
     this.orcid = '0000-0002-2308-9517';
     this.gmail = 'nanaknihal@gmail.com';
     [this.name, this.bio] = ['Greg', 'Business person'];
@@ -134,7 +134,7 @@ describe('wtf-js', function () {
 
   describe('getAllAccounts', function () {
     it('Should return correct creds, name, and bio for registered address', async function () {
-      const credsNameBio = await wtf.getAllAccounts('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', 'ethereum');
+      const credsNameBio = await wtf.getAllAccounts(this.userAddress, 'ethereum');
       expect(credsNameBio['creds']).to.be.an('array').that.includes.members([this.orcid, this.gmail]);
       expect(credsNameBio['name']).to.equal(this.name);
       expect(credsNameBio['bio']).to.equal(this.bio);

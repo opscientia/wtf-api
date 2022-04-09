@@ -42,3 +42,24 @@ We might want to see which users are registered on WTF. Get an object containing
 Finally, it is recommended that projects using wtf-lib use their own JSON RPC providers to access blockchain networks. By default, wtf-lib uses ethers default providers, but these can be slow. Use `setProviderURL` to specify the http url of your provider. If you are testing with a local test blockchain, you might wish to set the provider URL to localhost:
 
     wtf.setProviderURL('http://localhost:8545')
+
+## Contribute
+To setup your environment to contribute, first clone this repository.
+
+    git clone https://github.com/opscientia/wtf-api.git
+    
+Change directory into wtf-api.
+
+    cd wtf-api
+
+This package was developed with Node v16.14.2. If you are using nvm, run:
+
+    nvm use
+
+Install dependencies.
+
+    npm install
+
+Make sure everything works by running the tests.
+
+    npm run test
