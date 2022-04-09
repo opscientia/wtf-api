@@ -13,7 +13,7 @@ const {
 const vjwtABI = require('./contracts/VerifyJWT.json');
 const wtfBiosABI = require('./contracts/WTFBios.json');
 const idAggABI = require('./contracts/IdentityAggregator.json');
-// TODO: contractAddresses contains mock addresses. Update the json file with deployed contract addresses
+// const contractAddresses = require('../test/contracts/contractAddresses.json');
 const contractAddresses = require('./contracts/contractAddresses.json');
 const supportedNetworks = ['ethereum'];
 const supportedServices = ['orcid', 'google'];
@@ -148,4 +148,33 @@ exports.getAllUserAddresses = async () => {
 exports.bioForAddress = async (address, network) => {
   const wtfBios = getWTFBios(network);
   return await wtfBios.bioForAddress(address);
+}
+
+/**
+ * Get name associated with user's address on the specified network.
+ * @param {string} address The user's crypto address
+ * @param {string} network The blockchain network
+ * @returns User name
+ */
+ exports.nameForAddress = async (address, network) => {
+  const wtfBios = getWTFBios(network);
+  return await wtfBios.nameForAddress(address);
+}
+
+
+/**
+ * Get the credentials, name, and bio associated with the specified address on the specified network.
+ * @param {*} address The user's crypto address
+ * @param {*} network The blockchain network
+ * @returns An object containing credentials, name, and bio. 
+ *          Example: {'creds': ['xyz@gmail.com',], 'name': 'Greg', 'bio': 'Person'}
+ */
+exports.getAllAccounts = async (address, network) => {
+  const idAggregator = await getIdAggregator(network);
+  const {0: creds, 1: name, 2: bio} = await idAggregator.getAllAccounts(address);
+  const credsNameBio = {'creds': [], 'name': name, 'bio': bio}
+  for (const cred of creds) {
+    credsNameBio['creds'].push(hexToString(cred));
+  }
+  return credsNameBio;
 }

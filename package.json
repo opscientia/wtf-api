@@ -1,13 +1,21 @@
 {
   "name": "wtf-lib",
-  "version": "1.0.0",
-  "type": "module",
+  "version": "1.0.2",
+  "type": "commonjs",
   "main": "./wtf-js/lib/index.js",
   "module": "./wtf-react/lib/index.js",
+  "files": ["dist/"],
   "exports": {
     ".": {
-      "require":  "./wtf-js/lib/index.js",
+      "require": "./wtf-js/lib/index.js",
       "default": "./wtf-react/lib/index.js"
     }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "babel-loader": "^8.2.4",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2"
   }
 }

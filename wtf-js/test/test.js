@@ -1,4 +1,5 @@
 const { expect } = require('chai');
+const { ethers } = require('ethers');
 
 const wtf = require('../lib/index');
 const { 
@@ -7,7 +8,6 @@ const {
   CredentialsNotFoundError,
   AddressNotFoundError
 } = require('../lib/errors');
-const { ethers } = require('ethers');
 
 
 /**
@@ -17,12 +17,11 @@ const { ethers } = require('ethers');
 
 describe('wtf-js', function () {
 
-  // TODO: before(run startIntegration.js) // update startIntegration to take creds and addresses
-  //       Make startIntegration.js a self-contained script/module
   before(function () {
-    this.userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
-    this.orcid = '0000-0002-2308-9517'
-    this.gmail = 'nanaknihal@gmail.com'
+    this.userAddress = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266';
+    this.orcid = '0000-0002-2308-9517';
+    this.gmail = 'nanaknihal@gmail.com';
+    [this.name, this.bio] = ['Greg', 'Business person'];
 
     wtf.setProviderURL('http://localhost:8545')
   });
@@ -69,12 +68,12 @@ describe('wtf-js', function () {
   });
 
   describe('addressForCredentials', function () {
-    it('Should return correct address (orcid)', async function () {
+    it('Should return correct address (google)', async function () {
       const address = await wtf.addressForCredentials('ethereum', this.gmail, 'google');
       expect(address).to.equal(this.userAddress);
     });
 
-    it('Should return correct address (google)', async function () {
+    it('Should return correct address (orcid)', async function () {
       const address = await wtf.addressForCredentials('ethereum', '0000-0002-2308-9517', 'orcid');
       expect(address).to.equal(this.userAddress);
     });
@@ -123,6 +122,22 @@ describe('wtf-js', function () {
     it('Should return no bio for unregistered address', async function () {
       const bio = await wtf.bioForAddress('0x1234567891234567891234567891234567891234', 'ethereum');
       expect(bio).to.equal('');
+    });
+  });
+
+  describe('nameForAddress', function () {
+    it('Should return no name for unregistered address', async function () {
+      const name = await wtf.nameForAddress('0x1234567891234567891234567891234567891234', 'ethereum');
+      expect(name).to.equal('');
+    });
+  });
+
+  describe('getAllAccounts', function () {
+    it('Should return correct creds, name, and bio for registered address', async function () {
+      const credsNameBio = await wtf.getAllAccounts('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', 'ethereum');
+      expect(credsNameBio['creds']).to.be.an('array').that.includes.members([this.orcid, this.gmail]);
+      expect(credsNameBio['name']).to.equal(this.name);
+      expect(credsNameBio['bio']).to.equal(this.bio);
     });
   });
 });
