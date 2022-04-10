@@ -1,5 +1,8 @@
 {
   "production": {
+    "IdentityAggregator": {
+      "polygon": "0xe7d38C12EC231414B49F7cB4695ddAc908F3A852"
+    },
     "VerifyJWT": {
       "ropsten": {
         "orcid" : "0xdF10310d2C72F5358b19bF6A7C817Ec4570b270f"
