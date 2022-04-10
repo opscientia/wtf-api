@@ -1,5 +1,8 @@
 .env
 .vscode
+.nvmrc
 node_modules
+dist
+mocharc.json
 **/[Tt]est*
 *.sol
