@@ -1,4 +1,5 @@
 const ethers = require('ethers');
+const Buffer = require('buffer/').Buffer;
 
 // import { fixedBufferXOR as xor, sandwichIDWithBreadFromContract, padBase64, hexToString, searchForPlainTextInBase64 } from 'wtfprotocol-helpers';
 const { hexToString } = require('wtfprotocol-helpers');
@@ -13,8 +14,10 @@ const {
 const vjwtABI = require('./contracts/VerifyJWT.json');
 const wtfBiosABI = require('./contracts/WTFBios.json');
 const idAggABI = require('./contracts/IdentityAggregator.json');
-// const contractAddresses = require('../test/contracts/contractAddresses.json');
-const contractAddresses = require('./contracts/contractAddresses.json');
+const contractAddresses = process.env.WTF_USE_TEST_CONTRACT_ADDRESSES == "true" 
+                          ? require('./contracts/contractAddresses.json')["test"]
+                          : require('./contracts/contractAddresses.json')["production"]
+
 const supportedNetworks = ['ethereum'];
 const supportedServices = ['orcid', 'google'];
 const idAggStr = 'IdentityAggregator';

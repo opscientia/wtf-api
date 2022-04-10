@@ -1,4 +1,5 @@
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: './wtf-js/lib/index.js',
@@ -7,6 +8,9 @@ module.exports = {
     filename: 'main.js',
   },
   mode: 'production',
+  plugins: [
+    new Dotenv()
+  ]
   // use: {
   //   loader: 'babel-loader',
   //   options: {
