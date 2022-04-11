@@ -22,11 +22,3 @@ exports.UnsupportedServiceError = (service) => {
 //     this.name = 'VALIDATION_ERROR'
 //   }
 // }
-
-exports.CredentialsNotFoundError = (service, address) => {
-  return new Error(`Could not find ${service} credentials for ${address}`)
-}
-
-exports.AddressNotFoundError = (service, credentials) => {
-  return new Error(`Could not find address for ${service} ${credentials}`)
-}

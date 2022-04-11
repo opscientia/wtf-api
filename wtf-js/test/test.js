@@ -4,8 +4,6 @@ const { ethers } = require('ethers');
 const wtf = require('../lib/index');
 const {
   UnsupportedServiceError,
-  CredentialsNotFoundError,
-  AddressNotFoundError
 } = require('../lib/errors');
 
 
@@ -45,14 +43,10 @@ describe('wtf-js', function () {
       }
     });
 
-    it("Should throw CredentialsNotFoundError when querying for unfound credentials", async function () {
+    it("Should return empty string when querying for unfound credentials", async function () {
       const badAddress = '0x1234567891234567891234567891234567891234'
-      try {
-        await wtf.credentialsForAddress(badAddress, 'orcid')
-      }
-      catch (err) {
-        expect(err.message).to.equal(CredentialsNotFoundError('orcid', badAddress).message)
-      }
+      const resp = await wtf.credentialsForAddress(badAddress, 'orcid')
+      expect(resp).to.equal('');
     });
   });
 

@@ -5,9 +5,7 @@ const Buffer = require('buffer/').Buffer;
 const { hexToString } = require('wtfprotocol-helpers');
 const {
   ConnectionFailedError,
-  UnsupportedServiceError,
-  CredentialsNotFoundError,
-  AddressNotFoundError
+  UnsupportedServiceError
 } = require('./errors');
 
 const vjwtABI = require('./contracts/VerifyJWT.json');
@@ -78,7 +76,7 @@ const getCreds = async (vjwts, userAddress) => {
       return hexToString(credsBytes);
     }
   }
-  throw CredentialsNotFoundError(service, userAddress);
+  return '';
 }
 
 // See comment above getCreds().
@@ -90,7 +88,7 @@ const getAddress = async (vjwts, encodedCreds) => {
       return address;
     }
   }
-  throw AddressNotFoundError(service, userAddress);
+  return '';
 }
 
 // See comment above getCreds().
@@ -102,7 +100,7 @@ const getBio = async (wtfBiosContracts, userAddress) => {
       return bio;
     }
   }
-  throw new Error(`No WTF bio for ${userAddress}`);
+  return '';
 }
 
 // See comment above getCreds().
@@ -114,7 +112,7 @@ const getBio = async (wtfBiosContracts, userAddress) => {
       return name;
     }
   }
-  throw new Error(`No WTF name for ${userAddress}`);
+  return '';
 }
 
 /**
