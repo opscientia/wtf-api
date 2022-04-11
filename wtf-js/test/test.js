@@ -132,9 +132,9 @@ describe('wtf-js', function () {
     });
   });
 
-  describe('getAllAccounts', function () {
+  describe('getHolo', function () {
     it('Should return correct creds, name, and bio for registered address', async function () {
-      const credsNameBio = await wtf.getAllAccounts(this.userAddress, 'ethereum');
+      const credsNameBio = await wtf.getHolo(this.userAddress, 'ethereum');
       expect(credsNameBio['creds']).to.be.an('array').that.includes.members([this.orcid, this.gmail]);
       expect(credsNameBio['name']).to.equal(this.name);
       expect(credsNameBio['bio']).to.equal(this.bio);
