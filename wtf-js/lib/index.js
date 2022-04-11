@@ -172,7 +172,7 @@ exports.bioForAddress = async (address, network) => {
  * @returns An object containing credentials, name, and bio. 
  *          Example: {'creds': ['xyz@gmail.com',], 'name': 'Greg', 'bio': 'Person'}
  */
-exports.getAllAccounts = async (address, network) => {
+exports.getHolo = async (address, network) => {
   const idAggregator = await getIdAggregator(network);
   const {0: creds, 1: name, 2: bio} = await idAggregator.getAllAccounts(address);
   const credsNameBio = {'creds': [], 'name': name, 'bio': bio}
