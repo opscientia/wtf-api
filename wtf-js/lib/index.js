@@ -5,7 +5,6 @@ const Buffer = require('buffer/').Buffer;
 const { hexToString } = require('wtfprotocol-helpers');
 const {
   ConnectionFailedError,
-  UnsupportedNetworkError,
   UnsupportedServiceError,
   CredentialsNotFoundError,
   AddressNotFoundError
@@ -27,59 +26,95 @@ const wtfBiosStr = 'WTFBios';
 // let provider = new ethers.providers.JsonRpcProvider(process.env.MORALIS_NODE_URL);
 let provider = ethers.getDefaultProvider()
 
-const getIdAggregator = (network) => {
-  const idAggregatorAddr = contractAddresses[idAggStr][network];
-  if (idAggregatorAddr){
-    return new ethers.Contract(idAggregatorAddr, idAggABI, provider);
+const getIdAggregators = () => {
+  let idAggregators = {};
+  for (network of Object.keys(contractAddresses[idAggStr])) {
+    const idAggregatorAddr = contractAddresses[idAggStr][network];
+    if (idAggregatorAddr){
+      idAggregators[network] = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
+    }
   }
-  else {
-    throw UnsupportedNetworkError(network);
-  }
+  return idAggregators || new Error('No IdentityAggregator contracts found on any network');
 }
 
-const getVerifyJWT = (network, service) => {
-  const vjwtAddressesOnNetwork = contractAddresses[vjwtStr][network];
-  if (!vjwtAddressesOnNetwork) {
-    throw UnsupportedNetworkError(network);
+const getVerifyJWTs = (service) => {
+  let vjwts = {};
+  for (network of Object.keys(contractAddresses[vjwtStr])) { 
+    const vjwtAddress = contractAddresses[vjwtStr][network][service];
+    if (vjwtAddress) {
+      vjwts[network] = new ethers.Contract(vjwtAddress, vjwtABI, provider);;
+    }
   }
-
-  const vjwtAddr = vjwtAddressesOnNetwork[service];
-  if (!vjwtAddr){
-    throw UnsupportedServiceError(network, service);
+  if (vjwts) {
+    return vjwts;
   }
-  else {
-    return new ethers.Contract(vjwtAddr, vjwtABI, provider);
-  }
+  throw UnsupportedServiceError(service);
 }
 
-const getWTFBios = (network) => {
-  const WTFBiosAddr = contractAddresses[wtfBiosStr][network];
-  if (WTFBiosAddr){
-    return new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
+const getWTFBiosContracts = () => {
+  let wtfBiosContracts = {};
+  for (network of Object.keys(contractAddresses[wtfBiosStr])) {
+    const WTFBiosAddr = contractAddresses[wtfBiosStr][network];
+    if (WTFBiosAddr){
+      wtfBiosContracts[network] = new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
+    }
   }
-  else {
-    throw UnsupportedNetworkError(network);
+  if (wtfBiosContracts) {
+    return wtfBiosContracts;
   }
+  throw new Error('Cannot find contract for WTF names and bios on any network');
 }
 
-const getCreds = async (vjwt, userAddress) => {
-  const credsBytes = await vjwt.credsForAddress(userAddress);
-  if (!credsBytes) {
-    throw CredentialsNotFoundError(network, service, userAddress);
+/**
+ * Searches all networks for a VerifyJWT with creds corresponding to the user's address.
+ * Returns the first creds found. NOTE: Does not return multiple values when the user has
+ * different creds on different chains.
+ */
+const getCreds = async (vjwts, userAddress) => {
+  for (network of Object.keys(vjwts)) {
+    const vjwt = vjwts[network];
+    const credsBytes = await vjwt.credsForAddress(userAddress);
+    if (credsBytes) {
+      return hexToString(credsBytes);
+    }
   }
-  else {
-    return hexToString(credsBytes);
-  }
+  throw CredentialsNotFoundError(service, userAddress);
 }
 
-const getAddress = async (vjwt, encodedCreds) => {
-  const address = await vjwt.addressForCreds(encodedCreds);
-  if (!address) {
-    throw AddressNotFoundError(network, service, userAddress);
+// See comment above getCreds().
+const getAddress = async (vjwts, encodedCreds) => {
+  for (network of Object.keys(vjwts)) {
+    const vjwt = vjwts[network];
+    const address = await vjwt.addressForCreds(encodedCreds);
+    if (address) {
+      return address;
+    }
   }
-  else {
-    return address;
+  throw AddressNotFoundError(service, userAddress);
+}
+
+// See comment above getCreds().
+const getBio = async (wtfBiosContracts, userAddress) => {
+  for (network of Object.keys(wtfBiosContracts)) {
+    const wtfBios = wtfBiosContracts[network];
+    const bio = await wtfBios.bioForAddress(userAddress);
+    if (bio) {
+      return bio;
+    }
   }
+  throw new Error(`No WTF bio for ${userAddress}`);
+}
+
+// See comment above getCreds().
+ const getName = async (wtfBiosContracts, userAddress) => {
+  for (network of Object.keys(wtfBiosContracts)) {
+    const wtfBios = wtfBiosContracts[network];
+    const name = await wtfBios.nameForAddress(userAddress);
+    if (name) {
+      return name;
+    }
+  }
+  throw new Error(`No WTF name for ${userAddress}`);
 }
 
 /**
@@ -97,31 +132,27 @@ exports.setProviderURL = async (rpcURL) => {
 
 /**
  * Get the credentials issued by a specific service that are associated
- * with a user's address on a specific network.
+ * with a user's address.
  * @param {string} address User's crypto address
- * @param {string} network The blockchain network to query
  * @param {string} service The platform that issued the credentials (e.g., 'google')
  * @returns The user's credentials (e.g., 'xyz@gmail.com')
  */
-exports.credentialsForAddress = async (address, network, service) => {
-  // const idAggregator = await getIdAggregator(network);
-  const vjwt = getVerifyJWT(network, service);
-  return await getCreds(vjwt, address)
+exports.credentialsForAddress = async (address, service) => {
+  const vjwts = getVerifyJWTs(service);
+  return await getCreds(vjwts, address);
 }
 
 /**
  * Get the address associated with specific credentials that were issued
- * by a specific service on a specific network.
- * @param {string} network The blockchain network to query
+ * by a specific service.
  * @param {string} creds The user's credentials (e.g., 'xyz@gmail.com')
  * @param {string} service The platform that issued the credentials (e.g., 'google')
  * @returns The user's crypto address
  */
-exports.addressForCredentials = async (network, creds, service) => {
-  // const idAggregator = await getIdAggregator(network);
-  const vjwt = getVerifyJWT(network, service);
+exports.addressForCredentials = async (creds, service) => {
+  const vjwts = getVerifyJWTs(service);
   const encodedCreds = Buffer.from(creds);
-  return await getAddress(vjwt, encodedCreds);
+  return await getAddress(vjwts, encodedCreds);
 }
 
 /**
@@ -143,41 +174,53 @@ exports.getAllUserAddresses = async () => {
 }
 
 /**
- * Get bio associated with user's address on the specified network.
+ * Get bio associated with user's address.
  * @param {string} address The user's crypto address
- * @param {string} network The blockchain network
  * @returns User bio
  */
-exports.bioForAddress = async (address, network) => {
-  const wtfBios = getWTFBios(network);
-  return await wtfBios.bioForAddress(address);
+exports.bioForAddress = async (address) => {
+  const wtfBiosContracts = getWTFBiosContracts();
+  // return await wtfBios.bioForAddress(address);
+  return await getBio(wtfBiosContracts, address);
 }
 
 /**
- * Get name associated with user's address on the specified network.
+ * Get name associated with user's address.
  * @param {string} address The user's crypto address
- * @param {string} network The blockchain network
  * @returns User name
  */
- exports.nameForAddress = async (address, network) => {
-  const wtfBios = getWTFBios(network);
-  return await wtfBios.nameForAddress(address);
+ exports.nameForAddress = async (address) => {
+  const wtfBiosContracts = getWTFBiosContracts();
+  // return await wtfBios.nameForAddress(address);
+  return await getName(wtfBiosContracts, address)
 }
 
 
 /**
- * Get the credentials, name, and bio associated with the specified address on the specified network.
- * @param {*} address The user's crypto address
- * @param {*} network The blockchain network
- * @returns An object containing credentials, name, and bio. 
- *          Example: {'creds': ['xyz@gmail.com',], 'name': 'Greg', 'bio': 'Person'}
+ * Get the credentials, name, and bio associated with the specified address.
+ * @param {string} address The user's crypto address
+ * @returns An object containing networks, credentials, name, and bio. 
+ *          Example: {'ethereum': {'creds': ['xyz@gmail.com',], 'name': 'Greg', 'bio': 'Person'},}
  */
-exports.getHolo = async (address, network) => {
-  const idAggregator = await getIdAggregator(network);
-  const {0: creds, 1: name, 2: bio} = await idAggregator.getAllAccounts(address);
-  const credsNameBio = {'creds': [], 'name': name, 'bio': bio}
-  for (const cred of creds) {
-    credsNameBio['creds'].push(hexToString(cred));
+exports.getHolo = async (address) => {
+  const idAggregators = await getIdAggregators();
+  let crossChainHolo = {};
+  for (network of Object.keys(idAggregators)) {
+    const idAggregator = idAggregators[network]
+    try {
+      const {0: creds, 1: name, 2: bio} = await idAggregator.getAllAccounts(address);
+      const credsNameBio = {'creds': [], 'name': name, 'bio': bio}
+      for (const cred of creds) {
+        credsNameBio['creds'].push(hexToString(cred));
+      } 
+      crossChainHolo[network] = credsNameBio;
+    }
+    catch (err) {
+      console.log(err);
+      console.log("An error occurred when calling IdentityAggregator. It is possible that " +
+                  "the provider you are using does not support one of the networks used by WTF.");
+      crossChainHolo[network] = {};
+    }
   }
-  return credsNameBio;
+  return crossChainHolo;
 }

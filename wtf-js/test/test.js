@@ -2,8 +2,7 @@ const { expect } = require('chai');
 const { ethers } = require('ethers');
 
 const wtf = require('../lib/index');
-const { 
-  UnsupportedNetworkError,
+const {
   UnsupportedServiceError,
   CredentialsNotFoundError,
   AddressNotFoundError
@@ -28,82 +27,62 @@ describe('wtf-js', function () {
 
   describe('credentialsForAddress', function () {
     it('Should return correct credentials (orcid)', async function () {
-      const creds = await wtf.credentialsForAddress(this.userAddress, 'ethereum', 'orcid');
+      const creds = await wtf.credentialsForAddress(this.userAddress, 'orcid');
       expect(creds).to.equal(this.orcid);
     });
     
     it('Should return correct credentials (google)', async function () {
-      const creds = await wtf.credentialsForAddress(this.userAddress, 'ethereum', 'google');
+      const creds = await wtf.credentialsForAddress(this.userAddress, 'google');
       expect(creds).to.equal(this.gmail);
-    });
-
-    it("Should throw UnsupportedNetworkError when network=='bitcoin'", async function () {
-      // TODO: Replace with chai's expect().to.throw()
-      try {
-        await wtf.credentialsForAddress(this.userAddress, 'bitcoin', 'google')
-      }
-      catch (err) {
-        expect(err.message).to.equal(UnsupportedNetworkError('bitcoin').message)
-      }
     });
 
     it("Should throw UnsupportedServiceError when service=='randoService'", async function () {
       try {
-        await wtf.credentialsForAddress(this.userAddress, 'ethereum', 'randoService')
+        await wtf.credentialsForAddress(this.userAddress, 'randoService')
       }
       catch (err) {
-        expect(err.message).to.equal(UnsupportedServiceError('ethereum', 'randoService').message)
+        expect(err.message).to.equal(UnsupportedServiceError('randoService').message)
       }
     });
 
     it("Should throw CredentialsNotFoundError when querying for unfound credentials", async function () {
       const badAddress = '0x1234567891234567891234567891234567891234'
       try {
-        await wtf.credentialsForAddress(badAddress, 'ethereum', 'orcid')
+        await wtf.credentialsForAddress(badAddress, 'orcid')
       }
       catch (err) {
-        expect(err.message).to.equal(CredentialsNotFoundError('ethereum', 'orcid', badAddress).message)
+        expect(err.message).to.equal(CredentialsNotFoundError('orcid', badAddress).message)
       }
     });
   });
 
   describe('addressForCredentials', function () {
     it('Should return correct address (google)', async function () {
-      const address = await wtf.addressForCredentials('ethereum', this.gmail, 'google');
+      const address = await wtf.addressForCredentials(this.gmail, 'google');
       expect(address).to.equal(this.userAddress);
     });
 
     it('Should return correct address (orcid)', async function () {
-      const address = await wtf.addressForCredentials('ethereum', '0000-0002-2308-9517', 'orcid');
+      const address = await wtf.addressForCredentials('0000-0002-2308-9517', 'orcid');
       expect(address).to.equal(this.userAddress);
-    });
-
-    it("Should throw UnsupportedNetworkError when network=='bitcoin'", async function () {
-      // TODO: Replace with chai's expect().to.throw()
-      try {
-        await wtf.addressForCredentials('bitcoin', this.gmail, 'google')
-      }
-      catch (err) {
-        expect(err.message).to.equal(UnsupportedNetworkError('bitcoin').message)
-      }
     });
 
     it("Should throw UnsupportedServiceError when service=='randoService'", async function () {
       try {
-        await wtf.addressForCredentials('ethereum', this.gmail, 'randoService')
+        await wtf.addressForCredentials(this.gmail, 'randoService')
       }
       catch (err) {
-        expect(err.message).to.equal(UnsupportedServiceError('ethereum', 'randoService').message)
+        expect(err.message).to.equal(UnsupportedServiceError('randoService').message)
       }
     });
 
-    it("Should throw CredentialsNotFoundError when querying for unfound credentials", async function () {
+    it("Should throw AddressNotFoundError when querying for an address not registered on Holonym", async function () {
       const badCredentials = '123abc'
       try {
-        await wtf.addressForCredentials('ethereum', badCredentials, 'orcid')
+        await wtf.addressForCredentials(badCredentials, 'orcid')
       }
       catch (err) {
-        expect(err.message).to.equal(AddressNotFoundError('ethereum', 'orcid', badCredentials).message)
+        expect(err.message).to.equal(AddressNotFoundError('orcid', badCredentials).message)
       }
     });
   });
@@ -119,13 +98,23 @@ describe('wtf-js', function () {
   });
 
   describe('bioForAddress', function () {
+    it('Should return correct bio for registered address', async function () {
+      const bio = await wtf.bioForAddress(this.userAddress);
+      expect(bio).to.equal(this.bio);
+    });
+
     it('Should return no bio for unregistered address', async function () {
-      const bio = await wtf.bioForAddress('0x1234567891234567891234567891234567891234', 'ethereum');
+      const bio = await wtf.bioForAddress('0x1234567891234567891234567891234567891234');
       expect(bio).to.equal('');
     });
   });
 
   describe('nameForAddress', function () {
+    it('Should return no name for unregistered address', async function () {
+      const name = await wtf.nameForAddress(this.userAddress);
+      expect(name).to.equal(this.name);
+    });
+
     it('Should return no name for unregistered address', async function () {
       const name = await wtf.nameForAddress('0x1234567891234567891234567891234567891234', 'ethereum');
       expect(name).to.equal('');
@@ -134,7 +123,8 @@ describe('wtf-js', function () {
 
   describe('getHolo', function () {
     it('Should return correct creds, name, and bio for registered address', async function () {
-      const credsNameBio = await wtf.getHolo(this.userAddress, 'ethereum');
+      const networksCredsNameBio = await wtf.getHolo(this.userAddress);
+      const credsNameBio = networksCredsNameBio['ethereum'];
       expect(credsNameBio['creds']).to.be.an('array').that.includes.members([this.orcid, this.gmail]);
       expect(credsNameBio['name']).to.equal(this.name);
       expect(credsNameBio['bio']).to.equal(this.bio);
