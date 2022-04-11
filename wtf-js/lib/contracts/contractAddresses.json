@@ -3,6 +3,9 @@
     "IdentityAggregator": {
       "polygon": "0xe7d38C12EC231414B49F7cB4695ddAc908F3A852"
     },
+    "WTFBios": {
+      "polygon": "0x61786552CD82F41ECf9bA160Ac48616064A70aF8"
+    },
     "VerifyJWT": {
       "ropsten": {
         "orcid" : "0xdF10310d2C72F5358b19bF6A7C817Ec4570b270f"
@@ -15,25 +18,12 @@
   },
   "test": {
     "IdentityAggregator": {
-      "ethereum": "0xE8D9D160E5aeef45a6d0b3dcB50F88c2b792e452",
-      "polygon": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+      "ethereum": "0xE8D9D160E5aeef45a6d0b3dcB50F88c2b792e452"
     },
     "VerifyJWT": {
       "ethereum": {
         "orcid" : "0x31CA6ac542a1ff1746E899f772D12E371589918e",
-        "google" : "0x68c1E96125F45284B7682AfD81a5BE534a9F352D",
-        "facebook" : null,
-        "github" : null,
-        "orcidavaxc" : "0x4D39C84712C9A13f4d348050E82A2Eeb45DB5e29",
-        "googleavaxc" : "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
-      },
-      "polygon": {
-        "orcid" : "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-        "google" : "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
-        "facebook" : null,
-        "github" : null,
-        "orcidavaxc" : "0x4D39C84712C9A13f4d348050E82A2Eeb45DB5e29",
-        "googleavaxc" : "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+        "google" : "0x68c1E96125F45284B7682AfD81a5BE534a9F352D"
       }
     },
     "WTFBios": {

@@ -14,12 +14,23 @@ const idAggABI = require('./contracts/IdentityAggregator.json');
 const contractAddresses = process.env.WTF_USE_TEST_CONTRACT_ADDRESSES == "true" 
                           ? require('./contracts/contractAddresses.json')["test"]
                           : require('./contracts/contractAddresses.json')["production"]
-
-const supportedNetworks = ['ethereum'];
-const supportedServices = ['orcid', 'google'];
 const idAggStr = 'IdentityAggregator';
 const vjwtStr = 'VerifyJWT';
 const wtfBiosStr = 'WTFBios';
+const supportedNetworks = Object.keys(contractAddresses[vjwtStr]);
+const getSupportedServices = () => {
+  let supportedServices = [];
+  for (network of Object.keys(contractAddresses[vjwtStr])) {
+    for (service of Object.keys(contractAddresses[vjwtStr][network])) {
+      if (supportedServices.indexOf(service) == -1) {
+        supportedServices.push(service);
+      }
+    }
+  }
+  return supportedServices;
+}
+const supportedServices = getSupportedServices();
+
 
 // let provider = new ethers.providers.JsonRpcProvider(process.env.MORALIS_NODE_URL);
 let provider = ethers.getDefaultProvider()
@@ -192,7 +203,6 @@ exports.bioForAddress = async (address) => {
   // return await wtfBios.nameForAddress(address);
   return await getName(wtfBiosContracts, address)
 }
-
 
 /**
  * Get the credentials, name, and bio associated with the specified address.
