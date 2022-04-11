@@ -170,13 +170,21 @@ exports.addressForCredentials = async (creds, service) => {
  */
 exports.getAllUserAddresses = async () => {
   let userAddresses = {};
-  for (network of supportedNetworks) {
+  for (network of Object.keys(contractAddresses[vjwtStr])) {
     userAddresses[network] = {};
-    for (keyword of supportedServices) {
-      const vjwtAddr = contractAddresses[vjwtStr][network][keyword];
+    for (service of Object.keys(contractAddresses[vjwtStr][network])) {
+      const vjwtAddr = contractAddresses[vjwtStr][network][service];
       const vjwt = new ethers.Contract(vjwtAddr, vjwtABI, provider);
-      const addresses = await vjwt.getRegisteredAddresses();
-      userAddresses[network][keyword] = addresses;
+      try {
+        const addresses = await vjwt.getRegisteredAddresses();
+        userAddresses[network][service] = addresses;
+      }
+      catch (err) {
+        console.log(err);
+        console.log("An error occurred when calling VerifyJWT. It is possible that " +
+                    "the provider you are using does not support one of the networks used by WTF.");
+        userAddresses[network][service] = [];
+      }
     }
   }
   return userAddresses;
