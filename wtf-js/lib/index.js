@@ -82,9 +82,16 @@ const getWTFBiosContracts = () => {
 const getCreds = async (vjwts, userAddress) => {
   for (network of Object.keys(vjwts)) {
     const vjwt = vjwts[network];
-    const credsBytes = await vjwt.credsForAddress(userAddress);
-    if (credsBytes) {
-      return hexToString(credsBytes);
+    try {
+      const credsBytes = await vjwt.credsForAddress(userAddress);
+      if (credsBytes) {
+        return hexToString(credsBytes);
+      }
+    }
+    catch (err) {
+      console.log(err);
+      console.log("An error occurred when calling VerifyJWT. It is possible that " +
+                  "the provider you are using does not support one of the networks used by WTF.");
     }
   }
   return '';
@@ -94,9 +101,16 @@ const getCreds = async (vjwts, userAddress) => {
 const getAddress = async (vjwts, encodedCreds) => {
   for (network of Object.keys(vjwts)) {
     const vjwt = vjwts[network];
-    const address = await vjwt.addressForCreds(encodedCreds);
-    if (address) {
-      return address;
+    try {
+      const address = await vjwt.addressForCreds(encodedCreds);
+      if (address) {
+        return address;
+      }
+    }
+    catch (err) {
+      console.log(err);
+      console.log("An error occurred when calling VerifyJWT. It is possible that " +
+                  "the provider you are using does not support one of the networks used by WTF.");
     }
   }
   return '';
@@ -106,9 +120,16 @@ const getAddress = async (vjwts, encodedCreds) => {
 const getBio = async (wtfBiosContracts, userAddress) => {
   for (network of Object.keys(wtfBiosContracts)) {
     const wtfBios = wtfBiosContracts[network];
-    const bio = await wtfBios.bioForAddress(userAddress);
-    if (bio) {
-      return bio;
+    try {
+      const bio = await wtfBios.bioForAddress(userAddress);
+      if (bio) {
+        return bio;
+      } 
+    }
+    catch (err) {
+      console.log(err);
+      console.log("An error occurred when calling WTFBios. It is possible that " +
+                  "the provider you are using does not support one of the networks used by WTF.");
     }
   }
   return '';
@@ -118,9 +139,16 @@ const getBio = async (wtfBiosContracts, userAddress) => {
  const getName = async (wtfBiosContracts, userAddress) => {
   for (network of Object.keys(wtfBiosContracts)) {
     const wtfBios = wtfBiosContracts[network];
-    const name = await wtfBios.nameForAddress(userAddress);
-    if (name) {
-      return name;
+    try {
+      const name = await wtfBios.nameForAddress(userAddress);
+      if (name) {
+        return name;
+      }
+    }
+    catch (err) {
+      console.log(err);
+      console.log("An error occurred when calling WTFBios. It is possible that " +
+                  "the provider you are using does not support one of the networks used by WTF.");
     }
   }
   return '';
