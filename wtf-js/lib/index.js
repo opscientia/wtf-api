@@ -32,8 +32,6 @@ const getSupportedServices = () => {
 const supportedServices = getSupportedServices();
 
 
-// let provider = new ethers.providers.JsonRpcProvider(process.env.MORALIS_NODE_URL);
-let provider = ethers.getDefaultProvider()
 let providers = {'default': ethers.getDefaultProvider()};
 let useSingleProivder = false;
 
@@ -190,7 +188,6 @@ exports.setProvidersURLs = async (rpcURLs) => {
   for (network of Object.keys(rpcURLs)) {
     const rpcURL = rpcURLs[network];
     try {
-      // provider = new ethers.providers.JsonRpcProvider(rpcURL);
       providers[network] = new ethers.providers.JsonRpcProvider(rpcURL);
     }
     catch (err) {
