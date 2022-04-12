@@ -1,6 +1,10 @@
 
-exports.ConnectionFailedError = () => {
-  return new Error('Could not connect to the specified JSON RPC provider')
+exports.ConnectionFailedError = (network) => {
+  if (network) 
+  {
+    return new Error(`Could not connect to the specified JSON RPC provider for ${network}`)
+  }
+  return new Error(`Could not connect to the specified JSON RPC provider`)
 }
 
 // class UnsupportedNetworkError extends Error {

@@ -34,10 +34,20 @@ const supportedServices = getSupportedServices();
 
 // let provider = new ethers.providers.JsonRpcProvider(process.env.MORALIS_NODE_URL);
 let provider = ethers.getDefaultProvider()
+let providers = {'default': ethers.getDefaultProvider()};
+let useSingleProivder = false;
+
+const getProvider = async (network) => {
+  if (useSingleProivder) {
+    return providers['default'];
+  }
+  return providers[network];
+}
 
 const getIdAggregators = () => {
   let idAggregators = {};
   for (network of Object.keys(contractAddresses[idAggStr])) {
+    const provider = getProvider(network);
     const idAggregatorAddr = contractAddresses[idAggStr][network];
     if (idAggregatorAddr){
       idAggregators[network] = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
@@ -49,6 +59,7 @@ const getIdAggregators = () => {
 const getVerifyJWTs = (service) => {
   let vjwts = {};
   for (network of Object.keys(contractAddresses[vjwtStr])) { 
+    const provider = getProvider(network);
     const vjwtAddress = contractAddresses[vjwtStr][network][service];
     if (vjwtAddress) {
       vjwts[network] = new ethers.Contract(vjwtAddress, vjwtABI, provider);;
@@ -63,6 +74,7 @@ const getVerifyJWTs = (service) => {
 const getWTFBiosContracts = () => {
   let wtfBiosContracts = {};
   for (network of Object.keys(contractAddresses[wtfBiosStr])) {
+    const provider = getProvider(network);
     const WTFBiosAddr = contractAddresses[wtfBiosStr][network];
     if (WTFBiosAddr){
       wtfBiosContracts[network] = new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
@@ -155,15 +167,35 @@ const getBio = async (wtfBiosContracts, userAddress) => {
 }
 
 /**
- * Specify the URL of the JSON RPC provider used by WTF.
- * @param {string} rpcURL The provider URL
+ * Specify the URLs of the JSON RPC providers used by WTF.
+ * @param {object} rpcURLs An object specifying which provider will be used to access which blockchain network.
+ *                         Accepts an indefinite number of endpoints. If only one provider is specified, wtf-lib
+ *                         will use that provider for all networks it queries. Only the networks supported by 
+ *                         WTF protocol will be used by wtf-lib.
+ *                         Example: {'ethereum', 'https://endpoint.io', 'polygon': 'https://endpoint2.io'}
  */
-exports.setProviderURL = async (rpcURL) => {
-  try {
-    provider = new ethers.providers.JsonRpcProvider(rpcURL)
+exports.setProvidersURLs = async (rpcURLs) => {
+  // Use single provider
+  if (Object.keys(rpcURLs).length == 1) {
+    try {
+      const rpcURL = rpcURLs[Object.keys(rpcURLs)[0]];
+      providers['default'] = new ethers.providers.JsonRpcProvider(rpcURL);
+      useSingleProivder = true;
+    }
+    catch (err) {
+      throw ConnectionFailedError();
+    }
   }
-  catch (err) {
-    throw ConnectionFailedError()
+  // Use multiple providers
+  for (network of Object.keys(rpcURLs)) {
+    const rpcURL = rpcURLs[network];
+    try {
+      // provider = new ethers.providers.JsonRpcProvider(rpcURL);
+      providers[network] = new ethers.providers.JsonRpcProvider(rpcURL);
+    }
+    catch (err) {
+      throw ConnectionFailedError(network);
+    }
   }
 }
 
@@ -199,6 +231,7 @@ exports.addressForCredentials = async (creds, service) => {
 exports.getAllUserAddresses = async () => {
   let userAddresses = {};
   for (network of Object.keys(contractAddresses[vjwtStr])) {
+    const provider = getProvider(network);
     userAddresses[network] = {};
     for (service of Object.keys(contractAddresses[vjwtStr][network])) {
       const vjwtAddr = contractAddresses[vjwtStr][network][service];
