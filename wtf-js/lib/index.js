@@ -35,7 +35,7 @@ const supportedServices = getSupportedServices();
 let providers = {'default': ethers.getDefaultProvider()};
 let useSingleProivder = false;
 
-const getProvider = async (network) => {
+const getProvider = (network) => {
   if (useSingleProivder) {
     return providers['default'];
   }
@@ -165,14 +165,14 @@ const getBio = async (wtfBiosContracts, userAddress) => {
 }
 
 /**
- * Specify the URLs of the JSON RPC providers used by WTF.
+ * Specify the URLs of the JSON RPC providers that wtf-lib will use for your project.
  * @param {object} rpcURLs An object specifying which provider will be used to access which blockchain network.
  *                         Accepts an indefinite number of endpoints. If only one provider is specified, wtf-lib
  *                         will use that provider for all networks it queries. Only the networks supported by 
  *                         WTF protocol will be used by wtf-lib.
  *                         Example: {'ethereum', 'https://endpoint.io', 'polygon': 'https://endpoint2.io'}
  */
-exports.setProvidersURLs = async (rpcURLs) => {
+exports.setProviderURL = async (rpcURLs) => {
   // Use single provider
   if (Object.keys(rpcURLs).length == 1) {
     try {
