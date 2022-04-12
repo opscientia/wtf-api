@@ -13,9 +13,12 @@ The WTF protocol allows identities from various web services to be associated wi
 
 (All of the below queries to WTF require the relevant users to be registered on WTF. One cannot use WTF to retrieve information about unregistered users.)
 
-It is recommended that projects using wtf-lib use their own JSON RPC providers to access blockchain networks. By default, wtf-lib uses ethers default providers, but these can be slow. Use `setProviderURL` to specify the http url of your provider. If you are testing with a local test blockchain, you would set the provider URL to localhost:
+It is recommended that projects using wtf-lib use their own JSON RPC providers to access blockchain networks. By default, wtf-lib uses ethers default providers, but these can be slow. Use `setProviderURL` to specify the http url of each of your providers. You can specify different providers for different networks, or you can specify one network. If you specify multiple providers, wtf-lib will use each endpoint only for its specified network. If you specify only one provider, wtf-lib will query that provider for all networks supported by WTF protocol.
 
-    wtf.setProviderURL('http://localhost:8545')
+    // Tell wtf-lib to use separate providers for Ethereum and Polygon.
+    wtf.setProviderURL({'ethereum', 'https://provider.io', 'polygon': 'https://otherprovider.io'})
+    // Tell wtf-lib to use one provider for all networks.
+    wtf.setProviderURL({'default': 'https://provider.io'})
 
 Get a user's identity associated with a particular service. In the following example, we query WTF smart contracts for the `google` identity associated with `userAddress`.
 
