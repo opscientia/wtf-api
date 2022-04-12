@@ -20,7 +20,7 @@ describe('wtf-js', function () {
     this.gmail = 'nanaknihal@gmail.com';
     [this.name, this.bio] = ['Greg', 'Business person'];
 
-    wtf.setProviderURL('http://localhost:8545')
+    wtf.setProviderURL({'default': 'http://localhost:8545'})
   });
 
   describe('credentialsForAddress', function () {
