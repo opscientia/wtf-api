@@ -1,10 +1,10 @@
 
-exports.ConnectionFailedError = () => {
-  return new Error('Could not connect to the specified JSON RPC provider')
-}
-
-exports.UnsupportedNetworkError = (network) => {
-  return new Error(`WTF protocol does not support ${network}`)
+exports.ConnectionFailedError = (network) => {
+  if (network) 
+  {
+    return new Error(`Could not connect to the specified JSON RPC provider for ${network}`)
+  }
+  return new Error(`Could not connect to the specified JSON RPC provider`)
 }
 
 // class UnsupportedNetworkError extends Error {
@@ -15,8 +15,8 @@ exports.UnsupportedNetworkError = (network) => {
 //   }
 // }
 
-exports.UnsupportedServiceError = (network, service) => {
-  return new Error(`WTF protocol does not support ${service} credentials on ${network}`)
+exports.UnsupportedServiceError = (service) => {
+  return new Error(`WTF protocol does not support ${service} credentials`)
 }
 
 // class UnsupportedServiceError extends Error {
@@ -26,11 +26,3 @@ exports.UnsupportedServiceError = (network, service) => {
 //     this.name = 'VALIDATION_ERROR'
 //   }
 // }
-
-exports.CredentialsNotFoundError = (network, service, address) => {
-  return new Error(`Could not find ${service} credentials for ${address} on ${network}`)
-}
-
-exports.AddressNotFoundError = (network, service, credentials) => {
-  return new Error(`Could not find address for ${service} ${credentials} on ${network}`)
-}

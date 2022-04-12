@@ -1,5 +1,10 @@
 .env
 .vscode
+.nvmrc
+webpack.config.js
+hardhat.config.js
 node_modules
-test
+dist
+mocharc.json
+**/[Tt]est*
 *.sol

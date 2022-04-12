@@ -1,18 +1,11 @@
 {
   "name": "wtf-lib",
-  "version": "1.0.2",
+  "version": "1.0.7",
+  "license": "MIT",
   "type": "commonjs",
   "main": "./wtf-js/lib/index.js",
-  "files": [
-    "dist/"
-  ],
   "scripts": {
     "test": "bash ./wtf-js/test.sh"
-  },
-  "exports": {
-    ".": {
-      "require": "./wtf-js/lib/index.js"
-    }
   },
   "dependencies": {
     "buffer": "^6.0.3",
