@@ -274,7 +274,7 @@ exports.bioForAddress = async (address) => {
  * Get the credentials, name, and bio associated with the specified address.
  * @param {string} address The user's crypto address
  * @returns An object containing networks, credentials, name, and bio. 
- *          Example: {'ethereum': {'creds': ['xyz@gmail.com',], 'name': 'Greg', 'bio': 'Person'},}
+ *          Example: {'ethereum': {'creds': {'google': 'xyz@gmail.com',}, 'name': 'Greg', 'bio': 'Person'},}
  */
 exports.getHolo = async (address) => {
   const idAggregators = await getIdAggregators();
@@ -282,11 +282,13 @@ exports.getHolo = async (address) => {
   for (network of Object.keys(idAggregators)) {
     const idAggregator = idAggregators[network]
     try {
+      const keywords = await idAggregator.getKeywords();
       const {0: creds, 1: name, 2: bio} = await idAggregator.getAllAccounts(address);
-      const credsNameBio = {'creds': [], 'name': name, 'bio': bio}
-      for (const cred of creds) {
-        credsNameBio['creds'].push(hexToString(cred));
-      } 
+      const credsNameBio = {'creds': {}, 'name': name, 'bio': bio}
+      for (const [i, cred] of creds.entries()) {
+        const keyword = keywords[i];
+        credsNameBio['creds'][keyword] = hexToString(cred);
+      }
       crossChainHolo[network] = credsNameBio;
     }
     catch (err) {
