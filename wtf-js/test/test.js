@@ -119,7 +119,9 @@ describe('wtf-js', function () {
     it('Should return correct creds, name, and bio for registered address', async function () {
       const networksCredsNameBio = await wtf.getHolo(this.userAddress);
       const credsNameBio = networksCredsNameBio['ethereum'];
-      expect(credsNameBio['creds']).to.be.an('array').that.includes.members([this.orcid, this.gmail]);
+      expect(credsNameBio['creds']).to.be.an('object');
+      expect(credsNameBio['creds']['orcid']).to.equal(this.orcid);
+      expect(credsNameBio['creds']['google']).to.equal(this.gmail);
       expect(credsNameBio['name']).to.equal(this.name);
       expect(credsNameBio['bio']).to.equal(this.bio);
     });
