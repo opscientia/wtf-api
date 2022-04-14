@@ -152,7 +152,7 @@ async function addUserToVerifyJWT(vjwtAddr, service, jwt, id, wallet) {
 async function addUserToWTFBios(wtfBiosAddr, bio, wallet) {
   const contractWithSigner = new ethers.Contract(wtfBiosAddr, wtfBiosABI, wallet);
 
-  await contractWithSigner.addNameAndBio('Greg', bio);
+  await contractWithSigner.setNameAndBio('Greg', bio);
   console.log(`WTFBios: Added the following name and bio for ${wallet.address}:`);
   console.log('    Name: Greg')
   console.log(`    Bio:  ${bio}`)
