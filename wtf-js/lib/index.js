@@ -223,10 +223,14 @@ exports.addressForCredentials = async (creds, service) => {
 
 /**
  * Get every registered user address on WTF for every supported network and service.
- * @return Dictionary of networks and user addresses with shape: {'network': {'service': ['0xabc...',],},}
+ * The response includes addresses with name and bio. These addresses are included
+ * under the key 'nameAndBio' (i.e., returnValue[network]['nameAndBio']).
+ * @return Dictionary of networks and user addresses with shape: 
+ * {'network': {'service': ['0xabc...',], {'nameAndBio': ['0xabc...',],},},}
  */
 exports.getAllUserAddresses = async () => {
   let userAddresses = {};
+  // Get addresses that have registered creds on a VerifyJWT
   for (network of Object.keys(contractAddresses[vjwtStr])) {
     const provider = getProvider(network);
     userAddresses[network] = {};
@@ -243,6 +247,19 @@ exports.getAllUserAddresses = async () => {
                     "the provider you are using does not support one of the networks used by WTF.");
         userAddresses[network][service] = [];
       }
+    }
+    // Get addresses that have name and bio on WTF/Holonym
+    const wtfBiosAddr = contractAddresses[wtfBiosStr][network]['nameAndBio'];
+    const wtfBios = new ethers.Contract(wtfBiosAddr, wtfBiosABI, provider);
+    try {
+      const addresses = await wtfBios.getRegisteredAddresses();
+      userAddresses[network]['nameAndBio'] = addresses;
+    }
+    catch (err) {
+      console.log(err);
+      console.log("An error occurred when calling WTFBios. It is possible that " +
+                  "the provider you are using does not support one of the networks used by WTF.");
+      userAddresses[network]['nameAndBio'] = [];
     }
   }
   return userAddresses;
