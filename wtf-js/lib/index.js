@@ -172,7 +172,7 @@ const getBio = async (wtfBiosContracts, userAddress) => {
  *                         WTF protocol will be used by wtf-lib.
  *                         Example: {'ethereum', 'https://endpoint.io', 'polygon': 'https://endpoint2.io'}
  */
-exports.setProviderURL = async (rpcURLs) => {
+exports.setProviderURL = (rpcURLs) => {
   // Use single provider
   if (Object.keys(rpcURLs).length == 1) {
     try {
@@ -248,7 +248,9 @@ exports.getAllUserAddresses = async () => {
         userAddresses[network][service] = [];
       }
     }
-    // Get addresses that have name and bio on WTF/Holonym
+  }
+  // Get addresses that have name and bio on WTF/Holonym
+  for (network of Object.keys(contractAddresses[wtfBiosStr])) {
     const wtfBiosAddr = contractAddresses[wtfBiosStr][network];
     const wtfBios = new ethers.Contract(wtfBiosAddr, wtfBiosABI, provider);
     try {
