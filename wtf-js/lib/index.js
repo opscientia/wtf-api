@@ -271,7 +271,8 @@ function wtf() {
   const getAllUserAddresses = async () => {
     let userAddresses = {};
     // Get addresses that have registered creds on a VerifyJWT
-    for (network of Object.keys(contractAddresses[vjwtStr])) {
+    let vjwtNetworks = useOneNetwork || Object.keys(contractAddresses[vjwtStr])
+    for (network of vjwtNetworks) {
       const provider = getProvider(network);
       userAddresses[network] = {};
       for (service of Object.keys(contractAddresses[vjwtStr][network])) {
@@ -290,7 +291,8 @@ function wtf() {
       }
     }
     // Get addresses that have name and bio on WTF/Holonym
-    for (network of Object.keys(contractAddresses[wtfBiosStr])) {
+    let wtfBiosNetworks = useOneNetwork || Object.keys(contractAddresses[wtfBiosStr])
+    for (network of wtfBiosNetworks) {
       const provider = getProvider(network);
       const wtfBiosAddr = contractAddresses[wtfBiosStr][network];
       const wtfBios = new ethers.Contract(wtfBiosAddr, wtfBiosABI, provider);
