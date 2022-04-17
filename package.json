@@ -1,6 +1,6 @@
 {
   "name": "wtf-lib",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "license": "MIT",
   "type": "commonjs",
   "main": "./wtf-js/lib/index.js",
