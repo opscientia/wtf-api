@@ -249,7 +249,7 @@ exports.getAllUserAddresses = async () => {
       }
     }
     // Get addresses that have name and bio on WTF/Holonym
-    const wtfBiosAddr = contractAddresses[wtfBiosStr][network]['nameAndBio'];
+    const wtfBiosAddr = contractAddresses[wtfBiosStr][network];
     const wtfBios = new ethers.Contract(wtfBiosAddr, wtfBiosABI, provider);
     try {
       const addresses = await wtfBios.getRegisteredAddresses();
