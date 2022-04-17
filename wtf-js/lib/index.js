@@ -271,7 +271,10 @@ function wtf() {
   const getAllUserAddresses = async () => {
     let userAddresses = {};
     // Get addresses that have registered creds on a VerifyJWT
-    let vjwtNetworks = useOneNetwork || Object.keys(contractAddresses[vjwtStr])
+    let vjwtNetworks = Object.keys(contractAddresses[vjwtStr]);
+    if (useOneNetwork) {
+      vjwtNetworks = [useOneNetwork];
+    }
     for (network of vjwtNetworks) {
       const provider = getProvider(network);
       userAddresses[network] = {};
@@ -291,7 +294,10 @@ function wtf() {
       }
     }
     // Get addresses that have name and bio on WTF/Holonym
-    let wtfBiosNetworks = useOneNetwork || Object.keys(contractAddresses[wtfBiosStr])
+    let wtfBiosNetworks = Object.keys(contractAddresses[wtfBiosStr]);
+    if (useOneNetwork) {
+      wtfBiosNetworks = [useOneNetwork];
+    }
     for (network of wtfBiosNetworks) {
       const provider = getProvider(network);
       const wtfBiosAddr = contractAddresses[wtfBiosStr][network];
