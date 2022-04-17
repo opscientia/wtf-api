@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { ethers } = require('ethers');
 
-const wtf = require('../lib/index')();
+const wtf = require('../lib/index');
 const {
   UnsupportedServiceError,
 } = require('../lib/errors');
