@@ -36,6 +36,8 @@ function wtf() {
   let providers = {'default': ethers.getDefaultProvider()};
   let useSingleProivder = false;
 
+  let useOneNetwork = '';
+
   const getProvider = (network) => {
     if (useSingleProivder) {
       return providers['default'];
@@ -198,6 +200,22 @@ function wtf() {
   }
 
   /**
+   * Tell this instance of wtf to only query a certain network. This is helpful if
+   * your app only makes use of one network, and you do not want wtf to query every
+   * chain supported by the protocol.
+   * @param {string} network The only network you want this instance of wtf to use (e.g., 'ethereum').
+   * @returns True if the specified network is supported, false otherwise.
+   */
+  const onlyUseThisNetwork = (network) => {
+    const index = supportedNetworks.indexOf(network)
+    if (index != -1) {
+      useOneNetwork = network;
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * Get the credentials issued by a specific service that are associated
    * with a user's address.
    * @param {string} address User's crypto address
@@ -324,6 +342,7 @@ function wtf() {
 
   return {
     setProviderURL: setProviderURL,
+    onlyUseThisNetwork: onlyUseThisNetwork,
     credentialsForAddress: credentialsForAddress,
     addressForCredentials: addressForCredentials,
     getAllUserAddresses: getAllUserAddresses,
