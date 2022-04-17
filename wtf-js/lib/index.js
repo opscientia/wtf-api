@@ -47,23 +47,37 @@ function wtf() {
 
   const getIdAggregators = () => {
     let idAggregators = {};
-    for (network of Object.keys(contractAddresses[idAggStr])) {
-      const provider = getProvider(network);
-      const idAggregatorAddr = contractAddresses[idAggStr][network];
-      if (idAggregatorAddr){
-        idAggregators[network] = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
+    if (useOneNetwork) {
+      const provider = getProvider(useOneNetwork);
+      const idAggregatorAddr = contractAddresses[idAggStr][useOneNetwork];
+      idAggregators[useOneNetwork] = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
+    }
+    else {
+      for (network of Object.keys(contractAddresses[idAggStr])) {
+        const provider = getProvider(network);
+        const idAggregatorAddr = contractAddresses[idAggStr][network];
+        if (idAggregatorAddr){
+          idAggregators[network] = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
+        }
       }
     }
     return idAggregators || new Error('No IdentityAggregator contracts found on any network');
   }
 
   const getVerifyJWTs = (service) => {
-    let vjwts = {};
-    for (network of Object.keys(contractAddresses[vjwtStr])) { 
-      const provider = getProvider(network);
-      const vjwtAddress = contractAddresses[vjwtStr][network][service];
-      if (vjwtAddress) {
-        vjwts[network] = new ethers.Contract(vjwtAddress, vjwtABI, provider);;
+    let vjwts = {}
+    if (useOneNetwork) {
+      const provider = getProvider(useOneNetwork);
+      const vjwtAddress = contractAddresses[vjwtStr][useOneNetwork][service];
+      vjwts[useOneNetwork] = new ethers.Contract(vjwtAddress, vjwtABI, provider);
+    }
+    else {
+      for (network of Object.keys(contractAddresses[vjwtStr])) {
+        const provider = getProvider(network);
+        const vjwtAddress = contractAddresses[vjwtStr][network][service];
+        if (vjwtAddress) {
+          vjwts[network] = new ethers.Contract(vjwtAddress, vjwtABI, provider);
+        }
       }
     }
     if (vjwts) {
@@ -74,11 +88,18 @@ function wtf() {
 
   const getWTFBiosContracts = () => {
     let wtfBiosContracts = {};
-    for (network of Object.keys(contractAddresses[wtfBiosStr])) {
-      const provider = getProvider(network);
-      const WTFBiosAddr = contractAddresses[wtfBiosStr][network];
-      if (WTFBiosAddr){
-        wtfBiosContracts[network] = new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
+    if (useOneNetwork) {
+      const provider = getProvider(useOneNetwork);
+      const WTFBiosAddr = contractAddresses[wtfBiosStr][useOneNetwork];
+      wtfBiosContracts[useOneNetwork] = new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
+    }
+    else {
+      for (network of Object.keys(contractAddresses[wtfBiosStr])) {
+        const provider = getProvider(network);
+        const WTFBiosAddr = contractAddresses[wtfBiosStr][network];
+        if (WTFBiosAddr){
+          wtfBiosContracts[network] = new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
+        }
       }
     }
     if (wtfBiosContracts) {
