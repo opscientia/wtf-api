@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const { ethers } = require('ethers');
 
-const wtf = require('../lib/index');
+const wtf = require('../lib/index')();
 const {
   UnsupportedServiceError,
 } = require('../lib/errors');
@@ -85,7 +85,7 @@ describe('wtf-js', function () {
     it('Should return an array of addresses', async function () {
       const addresses = await wtf.getAllUserAddresses();
       expect(addresses).to.be.an('object').that.has.all.keys('ethereum');
-      expect(addresses['ethereum']).to.be.an('object').that.has.keys('orcid', 'google');
+      expect(addresses['ethereum']).to.be.an('object').that.has.keys('orcid', 'google', 'nameAndBio');
       expect(addresses['ethereum']['orcid']).to.be.an('array').that.has.members([this.userAddress]);
       expect(addresses['ethereum']['google']).to.be.an('array').that.has.members([this.userAddress]);
     });
