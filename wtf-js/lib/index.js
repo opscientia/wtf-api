@@ -222,7 +222,7 @@ exports.addressForCredentials = async (creds, service) => {
 }
 
 /**
- * Get all every registered user address on WTF for every supported network and service.
+ * Get every registered user address on WTF for every supported network and service.
  * @return Dictionary of networks and user addresses with shape: {'network': {'service': ['0xabc...',],},}
  */
 exports.getAllUserAddresses = async () => {
