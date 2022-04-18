@@ -36,8 +36,6 @@ function wtf() {
   let providers = {'default': ethers.getDefaultProvider()};
   let useSingleProivder = false;
 
-  let useOneNetwork = '';
-
   const getProvider = (network) => {
     if (useSingleProivder) {
       return providers['default'];
@@ -47,18 +45,11 @@ function wtf() {
 
   const getIdAggregators = () => {
     let idAggregators = {};
-    if (useOneNetwork) {
-      const provider = getProvider(useOneNetwork);
-      const idAggregatorAddr = contractAddresses[idAggStr][useOneNetwork];
-      idAggregators[useOneNetwork] = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
-    }
-    else {
-      for (network of Object.keys(contractAddresses[idAggStr])) {
-        const provider = getProvider(network);
-        const idAggregatorAddr = contractAddresses[idAggStr][network];
-        if (idAggregatorAddr){
-          idAggregators[network] = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
-        }
+    for (network of Object.keys(contractAddresses[idAggStr])) {
+      const provider = getProvider(network);
+      const idAggregatorAddr = contractAddresses[idAggStr][network];
+      if (idAggregatorAddr){
+        idAggregators[network] = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
       }
     }
     return idAggregators || new Error('No IdentityAggregator contracts found on any network');
@@ -66,18 +57,11 @@ function wtf() {
 
   const getVerifyJWTs = (service) => {
     let vjwts = {}
-    if (useOneNetwork) {
-      const provider = getProvider(useOneNetwork);
-      const vjwtAddress = contractAddresses[vjwtStr][useOneNetwork][service];
-      vjwts[useOneNetwork] = new ethers.Contract(vjwtAddress, vjwtABI, provider);
-    }
-    else {
-      for (network of Object.keys(contractAddresses[vjwtStr])) {
-        const provider = getProvider(network);
-        const vjwtAddress = contractAddresses[vjwtStr][network][service];
-        if (vjwtAddress) {
-          vjwts[network] = new ethers.Contract(vjwtAddress, vjwtABI, provider);
-        }
+    for (network of Object.keys(contractAddresses[vjwtStr])) {
+      const provider = getProvider(network);
+      const vjwtAddress = contractAddresses[vjwtStr][network][service];
+      if (vjwtAddress) {
+        vjwts[network] = new ethers.Contract(vjwtAddress, vjwtABI, provider);
       }
     }
     if (vjwts) {
@@ -88,18 +72,11 @@ function wtf() {
 
   const getWTFBiosContracts = () => {
     let wtfBiosContracts = {};
-    if (useOneNetwork) {
-      const provider = getProvider(useOneNetwork);
-      const WTFBiosAddr = contractAddresses[wtfBiosStr][useOneNetwork];
-      wtfBiosContracts[useOneNetwork] = new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
-    }
-    else {
-      for (network of Object.keys(contractAddresses[wtfBiosStr])) {
-        const provider = getProvider(network);
-        const WTFBiosAddr = contractAddresses[wtfBiosStr][network];
-        if (WTFBiosAddr){
-          wtfBiosContracts[network] = new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
-        }
+    for (network of Object.keys(contractAddresses[wtfBiosStr])) {
+      const provider = getProvider(network);
+      const WTFBiosAddr = contractAddresses[wtfBiosStr][network];
+      if (WTFBiosAddr){
+        wtfBiosContracts[network] = new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
       }
     }
     if (wtfBiosContracts) {
@@ -221,22 +198,6 @@ function wtf() {
   }
 
   /**
-   * Tell this instance of wtf to only query a certain network. This is helpful if
-   * your app only makes use of one network, and you do not want wtf to query every
-   * chain supported by the protocol.
-   * @param {string} network The only network you want this instance of wtf to use (e.g., 'ethereum').
-   * @returns True if the specified network is supported, false otherwise.
-   */
-  const onlyUseThisNetwork = (network) => {
-    const index = supportedNetworks.indexOf(network)
-    if (index != -1) {
-      useOneNetwork = network;
-      return true;
-    }
-    return false;
-  }
-
-  /**
    * Get the credentials issued by a specific service that are associated
    * with a user's address.
    * @param {string} address User's crypto address
@@ -271,11 +232,7 @@ function wtf() {
   const getAllUserAddresses = async () => {
     let userAddresses = {};
     // Get addresses that have registered creds on a VerifyJWT
-    let vjwtNetworks = Object.keys(contractAddresses[vjwtStr]);
-    if (useOneNetwork) {
-      vjwtNetworks = [useOneNetwork];
-    }
-    for (network of vjwtNetworks) {
+    for (network of Object.keys(contractAddresses[vjwtStr])) {
       const provider = getProvider(network);
       userAddresses[network] = {};
       for (service of Object.keys(contractAddresses[vjwtStr][network])) {
@@ -294,11 +251,7 @@ function wtf() {
       }
     }
     // Get addresses that have name and bio on WTF/Holonym
-    let wtfBiosNetworks = Object.keys(contractAddresses[wtfBiosStr]);
-    if (useOneNetwork) {
-      wtfBiosNetworks = [useOneNetwork];
-    }
-    for (network of wtfBiosNetworks) {
+    for (network of Object.keys(contractAddresses[wtfBiosStr])) {
       const provider = getProvider(network);
       const wtfBiosAddr = contractAddresses[wtfBiosStr][network];
       const wtfBios = new ethers.Contract(wtfBiosAddr, wtfBiosABI, provider);
@@ -347,11 +300,7 @@ function wtf() {
   const getHolo = async (address) => {
     const idAggregators = await getIdAggregators();
     let crossChainHolo = {};
-    let idAggNetworks = Object.keys(idAggregators);
-    if (useOneNetwork) {
-      idAggNetworks = [useOneNetwork];
-    }
-    for (network of idAggNetworks) {
+    for (network of Object.keys(idAggregators)) {
       const idAggregator = idAggregators[network]
       try {
         const keywords = await idAggregator.getKeywords();
@@ -375,7 +324,6 @@ function wtf() {
 
   return {
     setProviderURL: setProviderURL,
-    onlyUseThisNetwork: onlyUseThisNetwork,
     credentialsForAddress: credentialsForAddress,
     addressForCredentials: addressForCredentials,
     getAllUserAddresses: getAllUserAddresses,
