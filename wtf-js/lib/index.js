@@ -237,7 +237,14 @@ function wtf() {
       userAddresses[network] = {};
       for (service of Object.keys(contractAddresses[vjwtStr][network])) {
         const vjwtAddr = contractAddresses[vjwtStr][network][service];
-        const vjwt = new ethers.Contract(vjwtAddr, vjwtABI, provider);
+        let vjwt = null;
+        if (vjwtAddr) {
+          vjwt = new ethers.Contract(vjwtAddr, vjwtABI, provider);
+        }
+        else {
+          console.log(`wtf-lib: no vjwt found for network "${network}" and service "${service}"`)
+          continue;
+        }
         try {
           const addresses = await vjwt.getRegisteredAddresses();
           userAddresses[network][service] = addresses;
