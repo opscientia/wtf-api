@@ -101,7 +101,7 @@ function wtf() {
       }
       catch (err) {
         console.log(err);
-        console.log("An error occurred when calling VerifyJWT. It is possible that " +
+        console.log(`An error occurred when calling VerifyJWT on network "${network}". It is possible that ` +
                     "the provider you are using does not support one of the networks used by WTF.");
       }
     }
@@ -120,7 +120,7 @@ function wtf() {
       }
       catch (err) {
         console.log(err);
-        console.log("An error occurred when calling VerifyJWT. It is possible that " +
+        console.log(`An error occurred when calling VerifyJWT on network "${network}". It is possible that ` +
                     "the provider you are using does not support one of the networks used by WTF.");
       }
     }
@@ -139,7 +139,7 @@ function wtf() {
       }
       catch (err) {
         console.log(err);
-        console.log("An error occurred when calling WTFBios. It is possible that " +
+        console.log(`An error occurred when calling WTFBios on network "${network}". It is possible that ` +
                     "the provider you are using does not support one of the networks used by WTF.");
       }
     }
@@ -158,7 +158,7 @@ function wtf() {
       }
       catch (err) {
         console.log(err);
-        console.log("An error occurred when calling WTFBios. It is possible that " +
+        console.log(`An error occurred when calling WTFBios on network "${network}". It is possible that ` +
                     "the provider you are using does not support one of the networks used by WTF.");
       }
     }
@@ -244,8 +244,11 @@ function wtf() {
         }
         catch (err) {
           console.log(err);
-          console.log("An error occurred when calling VerifyJWT. It is possible that " +
+          console.log(`An error occurred when calling VerifyJWT on network "${network}". It is possible that ` +
                       "the provider you are using does not support one of the networks used by WTF.");
+          if (!userAddresses[network]) { // to avoid "TypeError: Cannot set properties of undefined"
+            userAddresses[network] = {}
+          }
           userAddresses[network][service] = [];
         }
       }
@@ -261,8 +264,11 @@ function wtf() {
       }
       catch (err) {
         console.log(err);
-        console.log("An error occurred when calling WTFBios. It is possible that " +
+        console.log(`An error occurred when calling WTFBios on network "${network}". It is possible that ` +
                     "the provider you are using does not support one of the networks used by WTF.");
+        if (!userAddresses[network]) { // to avoid "TypeError: Cannot set properties of undefined"
+          userAddresses[network] = {}
+        }
         userAddresses[network]['nameAndBio'] = [];
       }
     }
@@ -314,7 +320,7 @@ function wtf() {
       }
       catch (err) {
         console.log(err);
-        console.log("An error occurred when calling IdentityAggregator. It is possible that " +
+        console.log(`An error occurred when calling IdentityAggregator on network "${network}". It is possible that ` +
                     "the provider you are using does not support one of the networks used by WTF.");
         crossChainHolo[network] = {};
       }
