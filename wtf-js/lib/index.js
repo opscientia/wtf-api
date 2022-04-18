@@ -347,7 +347,11 @@ function wtf() {
   const getHolo = async (address) => {
     const idAggregators = await getIdAggregators();
     let crossChainHolo = {};
-    for (network of Object.keys(idAggregators)) {
+    let idAggNetworks = Object.keys(idAggregators);
+    if (useOneNetwork) {
+      idAggNetworks = [useOneNetwork];
+    }
+    for (network of idAggNetworks) {
       const idAggregator = idAggregators[network]
       try {
         const keywords = await idAggregator.getKeywords();
