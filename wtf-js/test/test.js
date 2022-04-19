@@ -85,7 +85,7 @@ describe('wtf-js', function () {
     it('Should return an array of addresses', async function () {
       const addresses = await wtf.getAllUserAddresses();
       expect(addresses).to.be.an('object').that.has.all.keys('ethereum');
-      expect(addresses['ethereum']).to.be.an('object').that.has.keys('orcid', 'google');
+      expect(addresses['ethereum']).to.be.an('object').that.has.keys('orcid', 'google', 'nameAndBio');
       expect(addresses['ethereum']['orcid']).to.be.an('array').that.has.members([this.userAddress]);
       expect(addresses['ethereum']['google']).to.be.an('array').that.has.members([this.userAddress]);
     });
@@ -117,13 +117,14 @@ describe('wtf-js', function () {
 
   describe('getHolo', function () {
     it('Should return correct creds, name, and bio for registered address', async function () {
-      const networksCredsNameBio = await wtf.getHolo(this.userAddress);
-      const credsNameBio = networksCredsNameBio['ethereum'];
-      expect(credsNameBio['creds']).to.be.an('object');
-      expect(credsNameBio['creds']['orcid']).to.equal(this.orcid);
-      expect(credsNameBio['creds']['google']).to.equal(this.gmail);
-      expect(credsNameBio['name']).to.equal(this.name);
-      expect(credsNameBio['bio']).to.equal(this.bio);
+      const crossChainHolo = await wtf.getHolo(this.userAddress);
+      const holo = crossChainHolo['ethereum'];
+      expect(holo).to.be.an('object');
+      expect(holo['orcid']).to.equal(this.orcid);
+      expect(holo['google']).to.equal(this.gmail);
+      expect(holo['name']).to.equal(this.name);
+      expect(holo['bio']).to.equal(this.bio);
+      console.log(holo)
     });
   });
 });
