@@ -1,24 +1,18 @@
 {
   "production": {
     "IdentityAggregator": {
-      "gnosis": "0x4278b0B8aC44dc61579d5Ec3F01D8EA44873b079",
-      "polygon": "0xe7d38C12EC231414B49F7cB4695ddAc908F3A852"
+      "gnosis": "0x4278b0B8aC44dc61579d5Ec3F01D8EA44873b079"
     },
     "WTFBios": {
-      "gnosis": "0x99708c7c7d4895cFF1C81d0Ff96152b5AEcc3E78",
-      "polygon": "0xc45857b71223b6154f6bc488c8c32bD19c21f791"
+      "gnosis": "0x99708c7c7d4895cFF1C81d0Ff96152b5AEcc3E78"
     },
     "VerifyJWT": {
       "gnosis": {
         "orcid": "0x4D39C84712C9A13f4d348050E82A2Eeb45DB5e29",
-        "google": "0xC334b3465790bC77299D42635B25D77E3e46A78b"
-      },
-      "ropsten": {
-        "orcid" : "0xdF10310d2C72F5358b19bF6A7C817Ec4570b270f"
-      },
-      "polygon": {
-        "orcid" : "0x2779550E47349711d3CD895aFd8aE315ee9BC597",
-        "google" : "0x1362fe03c3c338f2e7dfaA44205f2B047f2C430D"
+        "google": "0xC334b3465790bC77299D42635B25D77E3e46A78b",
+        "Twitter": "0x97A2FAf052058b86a52A07F730EF8a16aD9aFcFB",
+        "Github" : "0x6029BD948942c7b355149087c47462c66Ea147ba",
+        "Discord" : "0xca6d00d3f78AD5a9B386824227BBe442c84344EA"
       }
     }
   },
