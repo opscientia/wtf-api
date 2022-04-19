@@ -10,9 +10,9 @@
       "gnosis": {
         "orcid": "0x4D39C84712C9A13f4d348050E82A2Eeb45DB5e29",
         "google": "0xC334b3465790bC77299D42635B25D77E3e46A78b",
-        "Twitter": "0x97A2FAf052058b86a52A07F730EF8a16aD9aFcFB",
-        "Github" : "0x6029BD948942c7b355149087c47462c66Ea147ba",
-        "Discord" : "0xca6d00d3f78AD5a9B386824227BBe442c84344EA"
+        "twitter": "0x97A2FAf052058b86a52A07F730EF8a16aD9aFcFB",
+        "github" : "0x6029BD948942c7b355149087c47462c66Ea147ba",
+        "discord" : "0xca6d00d3f78AD5a9B386824227BBe442c84344EA"
       }
     }
   },
