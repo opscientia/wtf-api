@@ -37,7 +37,7 @@ function wtf() {
   let useSingleProivder = false;
 
   const getProvider = (network) => {
-    if (useSingleProivder) {
+    if (useSingleProivder || !providers[network]) {
       return providers['default'];
     }
     return providers[network];
