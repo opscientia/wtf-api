@@ -308,7 +308,7 @@ function wtf() {
    * Get the credentials, name, and bio associated with the specified address.
    * @param {string} address The user's crypto address
    * @returns An object containing networks, credentials, name, and bio. 
-   *          Example: {'ethereum': {'creds': {'google': 'xyz@gmail.com',}, 'name': 'Greg', 'bio': 'Person'},}
+   *          Example: {'ethereum': {'google': 'xyz@gmail.com', 'name': 'Greg', 'bio': 'Person'},}
    */
   const getHolo = async (address) => {
     const idAggregators = await getIdAggregators();
@@ -318,10 +318,10 @@ function wtf() {
       try {
         const keywords = await idAggregator.getKeywords();
         const {0: creds, 1: name, 2: bio} = await idAggregator.getAllAccounts(address);
-        const credsNameBio = {'creds': {}, 'name': name, 'bio': bio}
+        const credsNameBio = {'name': name, 'bio': bio}
         for (const [i, cred] of creds.entries()) {
           const keyword = keywords[i];
-          credsNameBio['creds'][keyword] = hexToString(cred);
+          credsNameBio[keyword] = hexToString(cred);
         }
         crossChainHolo[network] = credsNameBio;
       }
