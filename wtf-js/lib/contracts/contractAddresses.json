@@ -1,12 +1,18 @@
 {
   "production": {
     "IdentityAggregator": {
+      "gnosis": "0x4278b0B8aC44dc61579d5Ec3F01D8EA44873b079",
       "polygon": "0xe7d38C12EC231414B49F7cB4695ddAc908F3A852"
     },
     "WTFBios": {
+      "gnosis": "0x99708c7c7d4895cFF1C81d0Ff96152b5AEcc3E78",
       "polygon": "0xc45857b71223b6154f6bc488c8c32bD19c21f791"
     },
     "VerifyJWT": {
+      "gnosis": {
+        "orcid": "0x4D39C84712C9A13f4d348050E82A2Eeb45DB5e29",
+        "google": "0xC334b3465790bC77299D42635B25D77E3e46A78b"
+      },
       "ropsten": {
         "orcid" : "0xdF10310d2C72F5358b19bF6A7C817Ec4570b270f"
       },
