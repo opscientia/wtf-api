@@ -1,3 +1,13 @@
+/**
+ * This test script contains all tests that depend on a running
+ * local Hardhat test blockchain.
+ * These tests should be run with the WTF_USE_TEST_CONTRACT_ADDRESSES
+ * environment variable set to true so that the "test" contract addresses
+ * in contractAddresses.json are used. These addresses point to the 
+ * contracts on the local Hardhat blockchain. These tests do not test 
+ * the contracts on non-local mainnets/testnets.
+ */
+
 const { expect } = require('chai');
 const { ethers } = require('ethers');
 
@@ -6,11 +16,6 @@ const {
   UnsupportedServiceError,
 } = require('../lib/errors');
 
-
-/**
- * NOTE: These tests currently rely on startIntegration.js from DIDJWT.
- *       The script must be running in order for these tests to pass.
- */
 
 describe('wtf-js', function () {
 

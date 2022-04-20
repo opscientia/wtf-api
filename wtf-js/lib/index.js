@@ -197,6 +197,14 @@ function wtf() {
     }
   }
 
+  const getContractABIs = () => { 
+    return {
+      VerifyJWT: vjwtABI,
+      WTFBios: wtfBiosABI,
+      IdentityAggregator: idAggABI 
+    }
+  }
+
   /**
    * Get the credentials issued by a specific service that are associated
    * with a user's address.
@@ -338,6 +346,7 @@ function wtf() {
   return {
     setProviderURL: setProviderURL,
     getContractAddresses: function() { return contractAddresses },
+    getContractABIs: getContractABIs,
     credentialsForAddress: credentialsForAddress,
     addressForCredentials: addressForCredentials,
     getAllUserAddresses: getAllUserAddresses,
