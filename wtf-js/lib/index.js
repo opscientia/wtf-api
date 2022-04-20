@@ -337,6 +337,7 @@ function wtf() {
 
   return {
     setProviderURL: setProviderURL,
+    getContractAddresses: function() { return contractAddresses },
     credentialsForAddress: credentialsForAddress,
     addressForCredentials: addressForCredentials,
     getAllUserAddresses: getAllUserAddresses,
