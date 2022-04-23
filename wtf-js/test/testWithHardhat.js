@@ -124,12 +124,11 @@ describe('wtf-js tests with Hardhat node', function () {
     it('Should return correct creds, name, and bio for registered address', async function () {
       const crossChainHolo = await wtf.getHolo(this.userAddress);
       const holo = crossChainHolo['ethereum'];
-      expect(holo['creds']).to.be.an('object');
-      expect(holo['creds']['orcid']).to.equal(this.orcid);
-      expect(holo['creds']['google']).to.equal(this.gmail);
+      expect(holo).to.be.an('object');
+      expect(holo['orcid']).to.equal(this.orcid);
+      expect(holo['google']).to.equal(this.gmail);
       expect(holo['name']).to.equal(this.name);
       expect(holo['bio']).to.equal(this.bio);
-      console.log(holo)
     });
   });
 });
