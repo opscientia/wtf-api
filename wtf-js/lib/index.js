@@ -49,7 +49,7 @@ function wtf() {
         idAggregators[network] = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
       }
     }
-    return idAggregators || new Error('No IdentityAggregator contracts found on any network');
+    return idAggregators;
   }
 
   const getVerifyJWTs = (service) => {
@@ -76,10 +76,7 @@ function wtf() {
         wtfBiosContracts[network] = new ethers.Contract(WTFBiosAddr, wtfBiosABI, provider);
       }
     }
-    if (wtfBiosContracts) {
-      return wtfBiosContracts;
-    }
-    throw new Error('Cannot find contract for WTF names and bios on any network');
+    return wtfBiosContracts;
   }
 
   /**
