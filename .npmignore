@@ -1,10 +1,8 @@
 .env
 .vscode
 .nvmrc
-webpack.config.js
 hardhat.config.js
 node_modules
-dist
 mocharc.json
 **/[Tt]est*
 *.sol
