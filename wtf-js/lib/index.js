@@ -260,7 +260,12 @@ function wtf() {
     for (network of Object.keys(wtfBiosContracts)) {
       const wtfBios = wtfBiosContracts[network];
       const addresses = await callWTFBiosFunction(wtfBios.getRegisteredAddresses)
-      userAddresses[network]['nameAndBio'] = addresses;
+      if (userAddresses[network]) {
+        userAddresses[network]['nameAndBio'] = addresses;
+      }
+      else {
+        userAddresses[network] = {'nameAndBio': addresses}
+      }
     }
     return userAddresses;
   }
