@@ -301,12 +301,12 @@ function wtf() {
       try {
         const keywords = await idAggregator.getKeywords();
         const {0: creds, 1: name, 2: bio} = await idAggregator.getAllAccounts(address);
-        const credsNameBio = {'creds': {}, 'name': name, 'bio': bio}
+        const holo = {'name': name, 'bio': bio}
         for (const [i, cred] of creds.entries()) {
           const keyword = keywords[i];
-          credsNameBio[keyword] = hexToString(cred);
+          holo[keyword] = hexToString(cred);
         }
-        crossChainHolo[network] = credsNameBio;
+        crossChainHolo[network] = holo;
       }
       catch (err) {
         logFailedContractCall(err, 'IdentityAggregator', network)
