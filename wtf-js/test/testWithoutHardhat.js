@@ -12,7 +12,7 @@ const { ethers } = require('ethers');
 const wtf = require('../lib/index');
 
 
-describe('wtf-js', function () {
+describe('wtf-js tests without Hardhat node', function () {
 
   describe('getContractAddresses', function () {
     it('Should return object with correct keys and shape', async function () {

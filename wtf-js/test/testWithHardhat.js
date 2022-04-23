@@ -17,7 +17,7 @@ const {
 } = require('../lib/errors');
 
 
-describe('wtf-js', function () {
+describe('wtf-js tests with Hardhat node', function () {
 
   before(function () {
     this.userAddress = '0x3fB3913a3452c20c2dA220Bd4D2635765b934c67';

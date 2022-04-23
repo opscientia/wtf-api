@@ -89,7 +89,13 @@ function wtf() {
    */
   const callContractFunction = async (contractFunction, params, contractName) => {
     try {
-      const response = await contractFunction(...params);
+      let response;
+      if (params && params.length > 0) {
+        response = await contractFunction(...params);
+      }
+      else {
+        response = await contractFunction();
+      }
       return response;
     }
     catch (err) {
@@ -245,35 +251,16 @@ function wtf() {
           console.log(`wtf-lib: no vjwt found for network "${network}" and service "${service}"`)
           continue;
         }
-        try {
-          const addresses = await vjwt.getRegisteredAddresses();
-          userAddresses[network][service] = addresses;
-        }
-        catch (err) {
-          logFailedContractCall(err, 'VerifyJWT', network)
-          if (!userAddresses[network]) { // to avoid "TypeError: Cannot set properties of undefined"
-            userAddresses[network] = {}
-          }
-          userAddresses[network][service] = [];
-        }
+        const addresses = await callVerifyJWTFunction(vjwt.getRegisteredAddresses);
+        userAddresses[network][service] = addresses;
       }
     }
     // Get addresses that have name and bio on WTF/Holonym
-    for (network of Object.keys(contractAddresses[wtfBiosStr])) {
-      const provider = getProvider(network);
-      const wtfBiosAddr = contractAddresses[wtfBiosStr][network];
-      const wtfBios = new ethers.Contract(wtfBiosAddr, wtfBiosABI, provider);
-      try {
-        const addresses = await wtfBios.getRegisteredAddresses();
-        userAddresses[network]['nameAndBio'] = addresses;
-      }
-      catch (err) {
-        logFailedContractCall(err, 'WTFBios', network)
-        if (!userAddresses[network]) { // to avoid "TypeError: Cannot set properties of undefined"
-          userAddresses[network] = {}
-        }
-        userAddresses[network]['nameAndBio'] = [];
-      }
+    const wtfBiosContracts = getWTFBiosContracts();
+    for (network of Object.keys(wtfBiosContracts)) {
+      const wtfBios = wtfBiosContracts[network];
+      const addresses = await callWTFBiosFunction(wtfBios.getRegisteredAddresses)
+      userAddresses[network]['nameAndBio'] = addresses;
     }
     return userAddresses;
   }
