@@ -83,6 +83,29 @@ function wtf() {
   }
 
   /**
+   * @param contractFunction The contract function to invoke (e.g., `vjwt.credsForAddress`)
+   * @param params Array of parameters passed to contractFunction
+   * @param {string} contractName e.g., "VerifyJWT" or "WTFBios" 
+   */
+  const callContractFunction = async (contractFunction, params, contractName) => {
+    try {
+      const response = await contractFunction(...params);
+      return response;
+    }
+    catch (err) {
+      logFailedContractCall(err, contractName)
+    }
+  }
+
+  const callVerifyJWTFunction = async (contractFunction, params) => {
+    return await callContractFunction(contractFunction, params, 'VerifyJWT')
+  }
+
+  const callWTFBiosFunction = async (contractFunction, params) => {
+    return await callContractFunction(contractFunction, params, 'WTFBios')
+  }
+
+  /**
    * Searches all networks for a VerifyJWT with creds corresponding to the user's address.
    * Returns the first creds found. NOTE: Does not return multiple values when the user has
    * different creds on different chains.
@@ -90,14 +113,9 @@ function wtf() {
   const getCreds = async (vjwts, userAddress) => {
     for (network of Object.keys(vjwts)) {
       const vjwt = vjwts[network];
-      try {
-        const credsBytes = await vjwt.credsForAddress(userAddress);
-        if (credsBytes) {
-          return hexToString(credsBytes);
-        }
-      }
-      catch (err) {
-        logFailedContractCall(err, 'VerifyJWT', network)
+      const credsBytes = await callVerifyJWTFunction(vjwt.credsForAddress, [userAddress]);
+      if (credsBytes) {
+        return hexToString(credsBytes);
       }
     }
     return '';
@@ -107,14 +125,9 @@ function wtf() {
   const getAddress = async (vjwts, encodedCreds) => {
     for (network of Object.keys(vjwts)) {
       const vjwt = vjwts[network];
-      try {
-        const address = await vjwt.addressForCreds(encodedCreds);
-        if (address) {
-          return address;
-        }
-      }
-      catch (err) {
-        logFailedContractCall(err, 'VerifyJWT', network)
+      const address = await callVerifyJWTFunction(vjwt.addressForCreds, [encodedCreds]);
+      if (address) {
+        return address;
       }
     }
     return '';
@@ -124,14 +137,9 @@ function wtf() {
   const getBio = async (wtfBiosContracts, userAddress) => {
     for (network of Object.keys(wtfBiosContracts)) {
       const wtfBios = wtfBiosContracts[network];
-      try {
-        const bio = await wtfBios.bioForAddress(userAddress);
-        if (bio) {
-          return bio;
-        } 
-      }
-      catch (err) {
-        logFailedContractCall(err, 'WTFBios', network)
+      const bio = await callWTFBiosFunction(wtfBios.bioForAddress, [userAddress])
+      if (bio) {
+        return bio
       }
     }
     return '';
@@ -141,14 +149,9 @@ function wtf() {
   const getName = async (wtfBiosContracts, userAddress) => {
     for (network of Object.keys(wtfBiosContracts)) {
       const wtfBios = wtfBiosContracts[network];
-      try {
-        const name = await wtfBios.nameForAddress(userAddress);
-        if (name) {
-          return name;
-        }
-      }
-      catch (err) {
-        logFailedContractCall(err, 'WTFBios', network)
+      const name = await callWTFBiosFunction(wtfBios.nameForAddress, [userAddress])
+      if (name) {
+        return name;
       }
     }
     return '';
