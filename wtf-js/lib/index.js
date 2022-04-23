@@ -304,7 +304,7 @@ function wtf() {
         const credsNameBio = {'creds': {}, 'name': name, 'bio': bio}
         for (const [i, cred] of creds.entries()) {
           const keyword = keywords[i];
-          credsNameBio['creds'][keyword] = hexToString(cred);
+          credsNameBio[keyword] = hexToString(cred);
         }
         crossChainHolo[network] = credsNameBio;
       }
