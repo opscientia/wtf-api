@@ -38,7 +38,9 @@ We can get a Holonym user's name and bio.
 
 To get all info associated with a user's address, use `getHolo`. 
 
-    const {'google': google, 'name': name, 'bio': bio} = await wtf.getHolo(userAddress);
+    const holo = await wtf.getHolo(userAddress);
+    const userName = holo['ethereum']['name']
+    const userOrcid = holo['ethereum']['orcid']
 
 We might want to see which users are registered on WTF. Get an object containing all registered addresses on all networks with `getAllUserAddresses`.
 

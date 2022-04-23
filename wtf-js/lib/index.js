@@ -290,8 +290,8 @@ function wtf() {
   /**
    * Get the credentials, name, and bio associated with the specified address.
    * @param {string} address The user's crypto address
-   * @returns An object containing networks, credentials, name, and bio. 
-   *          Example: {'ethereum': { 'creds': {'google': 'xyz@gmail.com',} 'name': 'Greg', 'bio': 'Person'},}
+   * @returns An object containing credentials, name, and bio, organized by network. 
+   *          Example: {'ethereum': {'google': 'xyz@gmail.com', 'name': 'Greg', 'bio': 'Person'},}
    */
   const getHolo = async (address) => {
     const idAggregators = await getIdAggregators();
