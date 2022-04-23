@@ -1,12 +1,9 @@
 const ethers = require('ethers');
 const Buffer = require('buffer/').Buffer;
 
-// import { fixedBufferXOR as xor, sandwichIDWithBreadFromContract, padBase64, hexToString, searchForPlainTextInBase64 } from 'wtfprotocol-helpers';
 const { hexToString } = require('wtfprotocol-helpers');
-const {
-  ConnectionFailedError,
-  UnsupportedServiceError
-} = require('./errors');
+const { ConnectionFailedError, UnsupportedServiceError } = require('./errors');
+const { logFailedContractCall } = require('./utils/utils')
 
 const vjwtABI = require('./contracts/VerifyJWT.json');
 const wtfBiosABI = require('./contracts/WTFBios.json');
@@ -100,9 +97,7 @@ function wtf() {
         }
       }
       catch (err) {
-        console.log(err);
-        console.log(`An error occurred when calling VerifyJWT on network "${network}". It is possible that ` +
-                    "the provider you are using does not support one of the networks used by WTF.");
+        logFailedContractCall(err, 'VerifyJWT', network)
       }
     }
     return '';
@@ -119,9 +114,7 @@ function wtf() {
         }
       }
       catch (err) {
-        console.log(err);
-        console.log(`An error occurred when calling VerifyJWT on network "${network}". It is possible that ` +
-                    "the provider you are using does not support one of the networks used by WTF.");
+        logFailedContractCall(err, 'VerifyJWT', network)
       }
     }
     return '';
@@ -138,9 +131,7 @@ function wtf() {
         } 
       }
       catch (err) {
-        console.log(err);
-        console.log(`An error occurred when calling WTFBios on network "${network}". It is possible that ` +
-                    "the provider you are using does not support one of the networks used by WTF.");
+        logFailedContractCall(err, 'WTFBios', network)
       }
     }
     return '';
@@ -157,9 +148,7 @@ function wtf() {
         }
       }
       catch (err) {
-        console.log(err);
-        console.log(`An error occurred when calling WTFBios on network "${network}". It is possible that ` +
-                    "the provider you are using does not support one of the networks used by WTF.");
+        logFailedContractCall(err, 'WTFBios', network)
       }
     }
     return '';
@@ -258,9 +247,7 @@ function wtf() {
           userAddresses[network][service] = addresses;
         }
         catch (err) {
-          console.log(err);
-          console.log(`An error occurred when calling VerifyJWT on network "${network}". It is possible that ` +
-                      "the provider you are using does not support one of the networks used by WTF.");
+          logFailedContractCall(err, 'VerifyJWT', network)
           if (!userAddresses[network]) { // to avoid "TypeError: Cannot set properties of undefined"
             userAddresses[network] = {}
           }
@@ -278,9 +265,7 @@ function wtf() {
         userAddresses[network]['nameAndBio'] = addresses;
       }
       catch (err) {
-        console.log(err);
-        console.log(`An error occurred when calling WTFBios on network "${network}". It is possible that ` +
-                    "the provider you are using does not support one of the networks used by WTF.");
+        logFailedContractCall(err, 'WTFBios', network)
         if (!userAddresses[network]) { // to avoid "TypeError: Cannot set properties of undefined"
           userAddresses[network] = {}
         }
@@ -297,7 +282,6 @@ function wtf() {
    */
   const bioForAddress = async (address) => {
     const wtfBiosContracts = getWTFBiosContracts();
-    // return await wtfBios.bioForAddress(address);
     return await getBio(wtfBiosContracts, address);
   }
 
@@ -308,7 +292,6 @@ function wtf() {
    */
   const nameForAddress = async (address) => {
     const wtfBiosContracts = getWTFBiosContracts();
-    // return await wtfBios.nameForAddress(address);
     return await getName(wtfBiosContracts, address)
   }
 
