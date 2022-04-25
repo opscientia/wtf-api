@@ -29,6 +29,7 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npx mocha ./wtf-js/test/testWithoutHardhat.js;
-    - run: node ./wtf-js/test/utils/runTestNode.js &
+    - run: export WTF_USE_TEST_CONTRACT_ADDRESSES=true;
+           node ./wtf-js/test/utils/runTestNode.js &
            sleep 5;
            npx mocha ./wtf-js/test/testWithHardhat.js
