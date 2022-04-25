@@ -5,7 +5,7 @@
   "type": "commonjs",
   "main": "./wtf-js/lib/index.js",
   "scripts": {
-    "test": "bash ./wtf-js/test.sh"
+    "test-local": "bash ./wtf-js/test.sh"
   },
   "dependencies": {
     "buffer": "^6.0.3",
