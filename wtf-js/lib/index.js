@@ -298,7 +298,7 @@ function wtf() {
     let crossChainHolo = {};
     for (network of Object.keys(idAggregators)) {
       const idAggregator = idAggregators[network]
-      try {
+      try { // Call idAggregator
         const keywords = await idAggregator.getKeywords();
         const {0: creds, 1: name, 2: bio} = await idAggregator.getAllAccounts(address);
         const holo = {'name': name, 'bio': bio}
@@ -312,6 +312,17 @@ function wtf() {
         logFailedContractCall(err, 'IdentityAggregator', network)
         crossChainHolo[network] = {};
       }
+      try { // Call Proof of Humanity
+        const pohAddr = '0x1dAD862095d40d43c2109370121cf087632874dB'
+        const pohInterface = ["function isRegistered(address) external view returns (bool)"]
+        const pohContract = new ethers.Contract(pohAddr, pohInterface, getProvider(network));
+        crossChainHolo[network]['pohRegistered'] = await pohContract.isRegistered(address);
+      }
+      catch (err) {
+        logFailedContractCall(err, 'ProofOfHumanity', network)
+      }
+      // Call ENS
+      crossChainHolo[network]['ens'] = await getProvider(network).lookupAddress(address);
     }
     return crossChainHolo;
   }

@@ -17,6 +17,8 @@ const {
 } = require('../lib/errors');
 
 
+// TODO: Test ENS, PoH, BrightID
+
 describe('wtf-js tests with Hardhat node', function () {
 
   before(function () {
