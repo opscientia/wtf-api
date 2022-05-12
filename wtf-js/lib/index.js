@@ -321,8 +321,12 @@ function wtf() {
       catch (err) {
         logFailedContractCall(err, 'ProofOfHumanity', network)
       }
-      // Call ENS
-      crossChainHolo[network]['ens'] = await getProvider(network).lookupAddress(address);
+      try { // Call ENS
+        crossChainHolo[network]['ens'] = await getProvider(network).lookupAddress(address);
+      }
+      catch (err) {
+        console.log(`Failed to retrieve ENS for ${address} on ${network}`)
+      }
     }
     return crossChainHolo;
   }
