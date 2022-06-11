@@ -335,6 +335,8 @@ function wtf() {
 
   return {
     setProviderURL: setProviderURL,
+    getSupportedServices: function() { return supportedServices },
+    getSupportedNetworks: function() { return supportedNetworks },
     getContractAddresses: function() { return contractAddresses },
     getContractABIs: getContractABIs,
     credentialsForAddress: credentialsForAddress,
