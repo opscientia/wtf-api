@@ -1,10 +1,12 @@
 {
   "production": {
     "IdentityAggregator": {
-      "gnosis": "0x4278b0B8aC44dc61579d5Ec3F01D8EA44873b079"
+      "gnosis": "0x4278b0B8aC44dc61579d5Ec3F01D8EA44873b079",
+      "mumbai": "0xE3189B1C7aee04ba9Fb02a5aa13BaFD92019220c"
     },
     "WTFBios": {
-      "gnosis": "0x99708c7c7d4895cFF1C81d0Ff96152b5AEcc3E78"
+      "gnosis": "0x99708c7c7d4895cFF1C81d0Ff96152b5AEcc3E78",
+      "mumbai": "0x76DCb00eE1AaD755e9C44dEf252815A672e23E81"
     },
     "VerifyJWT": {
       "gnosis": {
@@ -13,6 +15,12 @@
         "twitter": "0x97A2FAf052058b86a52A07F730EF8a16aD9aFcFB",
         "github" : "0x6029BD948942c7b355149087c47462c66Ea147ba",
         "discord" : "0xca6d00d3f78AD5a9B386824227BBe442c84344EA"
+      },
+      "mumbai": {
+        "orcid": "0xc9969CD23141cfaA88005c01FC6b99f08093C748",
+        "twitter": "0xe1EbEFBf467Cf2Da656cCcb577EDEF00056890e9",
+        "github": "0x668eb680EB33fEFf69f3904A12B8C6F05A5a32bD",
+        "discord": "0xAfB5F17608507842A9896616758035FB9891B182"
       }
     }
   },
