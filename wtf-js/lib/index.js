@@ -293,12 +293,12 @@ function wtf() {
    * @returns An object containing credentials, name, and bio, organized by network. 
    *          Example: {'ethereum': {'google': 'xyz@gmail.com', 'name': 'Greg', 'bio': 'Person'},}
    */
-  const getHolo = async (address) => {
-    const idAggregators = await getIdAggregators();
+  const getHolo = async (address, getPoH = false, getENS = false) => {
+    const idAggregators = getIdAggregators();
     let crossChainHolo = {};
     for (network of Object.keys(idAggregators)) {
       const idAggregator = idAggregators[network]
-      try {
+      try { // Call idAggregator
         const keywords = await idAggregator.getKeywords();
         const {0: creds, 1: name, 2: bio} = await idAggregator.getAllAccounts(address);
         const holo = {'name': name, 'bio': bio}
@@ -312,12 +312,35 @@ function wtf() {
         logFailedContractCall(err, 'IdentityAggregator', network)
         crossChainHolo[network] = {};
       }
+      if (network == 'ethereum') {
+        if (getPoH) {
+          try { // Call Proof of Humanity
+            const pohAddr = '0x1dAD862095d40d43c2109370121cf087632874dB'
+            const pohInterface = ["function isRegistered(address) external view returns (bool)"]
+            const pohContract = new ethers.Contract(pohAddr, pohInterface, getProvider(network));
+            crossChainHolo[network]['pohRegistered'] = await pohContract.isRegistered(address);
+          }
+          catch (err) {
+            logFailedContractCall(err, 'ProofOfHumanity', network)
+          }
+        }
+        if (getENS) {
+          try { // Call ENS
+            crossChainHolo[network]['ens'] = await getProvider(network).lookupAddress(address);
+          }
+          catch (err) {
+            console.log(`Failed to retrieve ENS for ${address} on ${network}`)
+          }
+        }
+      }
     }
     return crossChainHolo;
   }
 
   return {
     setProviderURL: setProviderURL,
+    getSupportedServices: function() { return supportedServices },
+    getSupportedNetworks: function() { return supportedNetworks },
     getContractAddresses: function() { return contractAddresses },
     getContractABIs: getContractABIs,
     credentialsForAddress: credentialsForAddress,
