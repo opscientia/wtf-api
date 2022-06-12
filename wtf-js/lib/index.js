@@ -294,7 +294,7 @@ function wtf() {
    *          Example: {'ethereum': {'google': 'xyz@gmail.com', 'name': 'Greg', 'bio': 'Person'},}
    */
   const getHolo = async (address, getPoH = false, getENS = false) => {
-    const idAggregators = await getIdAggregators();
+    const idAggregators = getIdAggregators();
     let crossChainHolo = {};
     for (network of Object.keys(idAggregators)) {
       const idAggregator = idAggregators[network]
