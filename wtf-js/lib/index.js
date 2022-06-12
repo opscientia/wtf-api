@@ -293,7 +293,7 @@ function wtf() {
    * @returns An object containing credentials, name, and bio, organized by network. 
    *          Example: {'ethereum': {'google': 'xyz@gmail.com', 'name': 'Greg', 'bio': 'Person'},}
    */
-  const getHolo = async (address) => {
+  const getHolo = async (address, getPoH = false, getENS = false) => {
     const idAggregators = await getIdAggregators();
     let crossChainHolo = {};
     for (network of Object.keys(idAggregators)) {
@@ -313,20 +313,24 @@ function wtf() {
         crossChainHolo[network] = {};
       }
       if (network == 'ethereum') {
-        try { // Call Proof of Humanity
-          const pohAddr = '0x1dAD862095d40d43c2109370121cf087632874dB'
-          const pohInterface = ["function isRegistered(address) external view returns (bool)"]
-          const pohContract = new ethers.Contract(pohAddr, pohInterface, getProvider(network));
-          crossChainHolo[network]['pohRegistered'] = await pohContract.isRegistered(address);
+        if (getPoH) {
+          try { // Call Proof of Humanity
+            const pohAddr = '0x1dAD862095d40d43c2109370121cf087632874dB'
+            const pohInterface = ["function isRegistered(address) external view returns (bool)"]
+            const pohContract = new ethers.Contract(pohAddr, pohInterface, getProvider(network));
+            crossChainHolo[network]['pohRegistered'] = await pohContract.isRegistered(address);
+          }
+          catch (err) {
+            logFailedContractCall(err, 'ProofOfHumanity', network)
+          }
         }
-        catch (err) {
-          logFailedContractCall(err, 'ProofOfHumanity', network)
-        }
-        try { // Call ENS
-          crossChainHolo[network]['ens'] = await getProvider(network).lookupAddress(address);
-        }
-        catch (err) {
-          console.log(`Failed to retrieve ENS for ${address} on ${network}`)
+        if (getENS) {
+          try { // Call ENS
+            crossChainHolo[network]['ens'] = await getProvider(network).lookupAddress(address);
+          }
+          catch (err) {
+            console.log(`Failed to retrieve ENS for ${address} on ${network}`)
+          }
         }
       }
     }
