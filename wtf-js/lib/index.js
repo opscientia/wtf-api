@@ -45,7 +45,7 @@ function wtf() {
     for (network of Object.keys(contractAddresses[idAggStr])) {
       const provider = getProvider(network);
       const idAggregatorAddr = contractAddresses[idAggStr][network];
-      if (idAggregatorAddr){
+      if (idAggregatorAddr) {
         idAggregators[network] = new ethers.Contract(idAggregatorAddr, idAggABI, provider);
       }
     }
@@ -296,7 +296,7 @@ function wtf() {
   const getHolo = async (address, getPoH = false, getENS = false) => {
     const idAggregators = getIdAggregators();
     let crossChainHolo = {};
-    for (network of Object.keys(idAggregators)) {
+    for (const network of Object.keys(idAggregators)) {
       const idAggregator = idAggregators[network]
       try { // Call idAggregator
         const keywords = await idAggregator.getKeywords();
