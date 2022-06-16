@@ -18,9 +18,9 @@ describe('wtf-js tests without Hardhat node', function () {
     it('Should return object with correct keys and shape', async function () {
       const contractAddresses = await wtf.getContractAddresses();
       expect(contractAddresses).to.be.an('object').with.all.keys(["IdentityAggregator", "VerifyJWT", "WTFBios"]);
-      expect(contractAddresses["IdentityAggregator"]).to.be.an('object').with.keys(["gnosis"]);
-      expect(contractAddresses["WTFBios"]).to.be.an('object').with.keys(["gnosis"]);
-      expect(contractAddresses["VerifyJWT"]).to.be.an('object').with.keys(["gnosis"]);
+      expect(contractAddresses["IdentityAggregator"]).to.be.an('object').with.keys(["gnosis", "mumbai"]);
+      expect(contractAddresses["WTFBios"]).to.be.an('object').with.keys(["gnosis", "mumbai"]);
+      expect(contractAddresses["VerifyJWT"]).to.be.an('object').with.keys(["gnosis", "mumbai"]);
       expect(contractAddresses["VerifyJWT"]["gnosis"]).to.be.an('object').with.keys(["orcid", "google", "twitter", "github", "discord"]);
     });
 
